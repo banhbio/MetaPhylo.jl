@@ -183,3 +183,21 @@ end
     @test_throws KeyError treelength(tree, 2) 
     @test_throws KeyError distance_matrix(tree)
 end
+
+@testset "show.jl" begin
+    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+
+    @test AbstractTrees.repr_tree(tree) == 
+        """
+        1: [root] 
+        ├─ 2: [length:0.3, value:100] 
+        │  ├─ 3: [length:0.1] label:\"A\"
+        │  └─ 4: [length:0.2] label:\"B\"
+        ├─ 5: [length:0.8, value:98] 
+        │  ├─ 6: [length:0.6, value:77] 
+        │  │  ├─ 7: [length:0.4] label:\"C\"
+        │  │  └─ 8: [length:0.5] label:\"D\"
+        │  └─ 9: [length:0.7] label:\"E\"
+        └─ 10: [length:0.9] label:\"F\"
+        """
+end
