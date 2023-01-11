@@ -1,13 +1,12 @@
-function Base.show(io::IO, tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable}
+function Base.show(io::IO, tree::Tree)
     print(
         io,
         """
         MetaPhylo.Tree with $(length(leaves(tree))) leaves.
-        Rooted: $(rooted)
-        Rerootable: $(rerootable)
+            Rooted: $(isrooted(tree))
+            Rerootable: $(isrerootable(tree))
         """
     )
-    nothing
 end
 AbstractTrees.print_tree(tree::Tree; kwargs...) = print_tree(IndexNode(tree); kwargs...)
 AbstractTrees.print_tree(io::IO, tree::Tree; kwargs...) = print_tree(io, IndexNode(tree); kwargs...)
