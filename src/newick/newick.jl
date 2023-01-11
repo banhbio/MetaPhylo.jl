@@ -1,6 +1,7 @@
 module Newick
     
 using MetaPhyTrees
+using Graphs
 using AbstractTrees
 export parse_newick
 

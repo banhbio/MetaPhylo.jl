@@ -13,7 +13,7 @@ include("show.jl")
 
 
 #export type utils
-export isrooted, isrerootable
+export Rooted, UnRooted, ReRootable, NotReRooteble, isrooted, isrerootable
 
 #export basic funtions
 export rootindex, parent_edge, leafedges, leaves, isleaf, isinternal,
