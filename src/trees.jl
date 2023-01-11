@@ -201,3 +201,18 @@ AbstractTrees.treeheight(tree::Tree) = treeheight(IndexNode(tree))
 Return the size og the tree.
 """
 AbstractTrees.treesize(tree::Tree) = treesize(IndexNode(tree))
+
+"""
+    ancestors(tree::Tree, idx::Integer)
+Return the indices of all ancestor nodes of the specified `idx` node.
+"""
+function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
+    idx_node = IndexNode(tree, idx)
+    ancestors_idx = Code[]
+    while true
+        push!(ancestors_idx, idx_node.index)
+        idx_node = AbstractTrees.parent(idx_node)
+        isnothing(idx_node) && break
+    end
+    return reverse(ancestors_idx)
+end
