@@ -187,6 +187,13 @@ end
 @testset "show.jl" begin
     tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
 
+    @test sprint(show, tree) ==
+        """
+        MetaPhyTrees.Tree with 6 leaves.
+            Rooted: false
+            Rerootable: true
+        """
+
     @test AbstractTrees.repr_tree(tree) == 
         """
         1: [root] 
