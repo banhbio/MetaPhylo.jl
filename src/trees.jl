@@ -163,3 +163,24 @@ function swap!(tree::Tree, idx::Integer, old_new::Pair{<:Integer, <:Integer})
     end
     return flag
 end
+
+"""
+    ladderize!(tree::Tree; left=false)
+Ladderize the tree structure. By default, the smallest clade is on the right side; if left=true, on the left side.
+"""
+function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
+    tree = idxnode.tree
+    for node in PreOrderDFS(idxnode)
+        idx = nodevalue(node)
+        sorted = sort(
+            childindices(tree, idx),
+            by = x -> treebreadth(IndexNode(tree,x)),
+            rev = left
+            )
+        swapchildren!(tree, idx, sorted)
+    end
+    return true
+end
+ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
+ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
+
