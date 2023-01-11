@@ -72,7 +72,7 @@ function reindex!(tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rer
     edges = Edge{Code}[]
     node_data = Pair{Code, Dict{Symbol, Any}}[]
     branch_data = Pair{Edge{Code}, Dict{Symbol, Any}}[]
-    
+
     for (new_index, idx_node) in enumerate(PreOrderDFS(IndexNode(tree)))
         old_index = idx_node.index
         counterpart[old_index] = new_index
@@ -92,3 +92,42 @@ function reindex!(tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rer
     tree.branch_data = Dict(branch_data)
     return true
 end
+
+#TODO: Is it the best way?
+function findpath(tree::Tree{Code}, sidx::Integer, tidx::Integer) where {Code<:Integer}
+    nodes = Code[]
+    while true
+        pidx = parentindex(tree, tidx)
+        push!(nodes, tidx)
+        tidx == sidx && break
+        isnothing(pidx) && return nothing
+        tidx = pidx
+    end
+    reverse!(nodes)
+    return nodes
+end
+
+"""
+    reroot!(tree::Tree, idx::Integer)
+Reroot the `tree` at the specified node. Return `true` if rerooting success.
+"""
+function reroot!(tree::Tree, idx::Integer)
+    @assert isrerootable(tree)
+
+    isleaf(tree, idx) && error("Leaf nodes are not allowed to reroot")
+    path = findpath(tree, rootindex(tree), idx)
+    @assert !isnothing(path)
+    #TODO: substitue with better way 
+    edges = Edge.(path[1:end-1], path[2:end])
+    rev_edges = Edge.(path[2:end], path[1:end-1])
+    for (e, re) in zip(edges, rev_edges)
+        rem_edge!(tree.graph, e)
+        add_edge!(tree.graph, re)
+        branch = getindex(tree.branch_data, e)
+        pop!(tree.branch_data, e)
+        tree.branch_data[re] = branch
+    end
+    tree.root = idx
+    return true
+end
+
