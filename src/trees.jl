@@ -224,3 +224,40 @@ Return the common ancestor index of two specified `idx1` and `idx2` nodes.
 function common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
     intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
 end
+
+function add_child!(tree::Tree, idx::Integer, bi::Dict{Symbol, Any}, ni::Dict{Symbol, Any})
+    !haskey(tree, idx) && return false
+    added = add_vertex!(tree.graph)
+    new_edge = Edge(idx, nv(tree.graph))
+    added &= add_edge!(tree.graph, new_edge)
+    if added
+        tree.node_data[nv(tree.graph)] = ni
+        tree.branch_data[new_edge] = bi
+    end
+    return added
+end
+
+function rem_descendants!(tree::Tree, idx::Integer)
+    !haskey(tree, idx) && throw(ArgumentError("The tree does not have the index to be removed"))
+    node_indices = nodevalue.(PreOrderDFS(IndexNode(tree, idx)))
+    vmap = rem_vertices!(tree.graph, node_indices)
+
+    for (new_idx, old_idx) in enumerate(vmap)
+        if new_idx != old_idx
+            tree.node_data[new_idx] = tree.node_data[old_idx]
+            pop!(tree.node_data, old_idx)
+
+            for edge in keys(tree.branch_data)
+                edge_indices = Tuple(edge)
+                if old_idx in edge_indices
+                    new_edge = first(edge_indices) == old_idx ? Edge(new_idx, last(edge_indices)) : Edge(first(edge_indices), new_idx)
+                    tree.branch_data[new_edge] = tree.branch_data[edge]
+                end
+            end
+        end
+    end
+
+    pop!.(tree.branch_data |> Ref, edge for edge in keys(tree.branch_data) if !in(edge, edges(tree.graph)))
+
+    return vmap
+end
