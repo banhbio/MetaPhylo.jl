@@ -49,7 +49,7 @@ AbstractTrees.NodeType(::Type{Dict{Symbol}}) = HasNodeType()
 AbstractTrees.children(dict::Dict{Symbol}) = get(dict, :descendants, Any[])
 AbstractTrees.nodetype(::Type{Dict{Symbol}}) = Dict{Symbol}
 
-function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, rooted, rerootable}}) where {Code, rooted, rerootable}
+function parse_newick(input::AbstractString, T::Type{<:MetaPhyTrees.Tree{Code, rooted, rerootable}}) where {Code, rooted, rerootable}
     parsed_tree = Lerche.parse(parser, input) # return tree in Dict{Symbol, Any}
 
     #TODO: push!() might be slow.
@@ -67,7 +67,7 @@ function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, root
 
         label = get(info, :label, nothing)
         graph_node = Dict{Symbol, Any}()
-        haskey(info, :label) && graph_node[:label] = info[:label] 
+        haskey(info, :label) ? graph_node[:label] = info[:label] : nothing
         push!(node_data, i=>graph_node)
 
         pid = get(info, :parent, nothing)
@@ -75,11 +75,13 @@ function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, root
         edge = Edge{Code}(pid, i)
         push!(edges, edge)
         graph_branch = Dict{Symbol, Any}()
-        haskey(info, :value) && graph_branch[:value] = info[:value]
-        haskey(info, :length) && graph_branch[:length] = info[:length]
+        haskey(info, :value) ? graph_branch[:value] = info[:value] : nothing
+        haskey(info, :length) ? graph_branch[:length] = info[:length] : nothing
         push!(branch_data, edge=>graph_branch)
     end
 
     graph = DiGraph(edges)
     return T(graph, 1, Dict(node_data), Dict(branch_data))
 end
+
+end #module

@@ -1,4 +1,4 @@
-function Base.show(io::IO, tree::Tree{Code, rooted, rerootable})
+function Base.show(io::IO, tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable}
     print(
         io,
         """
