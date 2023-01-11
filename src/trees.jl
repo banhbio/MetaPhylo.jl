@@ -184,3 +184,20 @@ end
 ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
 ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
 
+"""
+    AbstractTrees.treebreadth(tree::Tree)
+Return the number of leaves in the `tree`.
+"""
+AbstractTrees.treebreadth(tree::Tree) = treebreadth(IndexNode(tree))
+
+"""
+    AbstractTrees.treeheight(tree::Tree)
+Return the maximum depth from the root to the leaves in the tree. See also `treelength`.
+"""
+AbstractTrees.treeheight(tree::Tree) = treeheight(IndexNode(tree))
+
+"""
+    AbstractTrees.treesize(tree::Tree)
+Return the size og the tree.
+"""
+AbstractTrees.treesize(tree::Tree) = treesize(IndexNode(tree))
