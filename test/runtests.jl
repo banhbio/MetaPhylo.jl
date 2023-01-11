@@ -190,11 +190,11 @@ end
     @test AbstractTrees.repr_tree(tree) == 
         """
         1: [root] 
-        ├─ 2: [length:0.3, value:100] 
+        ├─ 2: [value:100.0, length:0.3] 
         │  ├─ 3: [length:0.1] label:\"A\"
         │  └─ 4: [length:0.2] label:\"B\"
-        ├─ 5: [length:0.8, value:98] 
-        │  ├─ 6: [length:0.6, value:77] 
+        ├─ 5: [value:98.0, length:0.8] 
+        │  ├─ 6: [value:77.0, length:0.6] 
         │  │  ├─ 7: [length:0.4] label:\"C\"
         │  │  └─ 8: [length:0.5] label:\"D\"
         │  └─ 9: [length:0.7] label:\"E\"
