@@ -131,3 +131,35 @@ function reroot!(tree::Tree, idx::Integer)
     return true
 end
 
+"""
+    swapchildren!(tree::Tree, idx::Integer, newchildren)
+Swap the child indices of the specified `idx` node to the given `newchildren`.
+The elements of children and `newchildren` must be match.
+Return `false` if swapping fails; true otherwise.
+"""
+function swapchildren!(tree::Tree, idx::Integer, newchildren::Vector{<:Integer})
+    !haskey(tree, idx) && return false
+    sort(tree.graph.fadjlist[idx]) != sort(newchildren) && return false
+    tree.graph.fadjlist[idx] = newchildren
+    return true
+end
+
+"""
+    swap!(tree::Tree, idx::Integer, old_new::Pair{<:Integer, <:Integer})
+Swap the two child elements of the specified `idx` node.
+The `old` and `new` in `old_new` must be child of `idx` node.
+Return `ture` if swapping fails; true otherwise.
+"""
+function swap!(tree::Tree, idx::Integer, old_new::Pair{<:Integer, <:Integer})
+    !haskey(tree, idx) && return false
+    old, new = old_new
+    chidx = childindices(tree, idx)
+    flag = (old in chidx) && (new in chidx)
+    if flag
+        oldpos = findfirst(isequal(old), tree.graph.fadjlist[idx])
+        newpos = findfirst(isequal(new), tree.graph.fadjlist[idx])
+        tree.graph.fadjlist[idx][oldpos] = new
+        tree.graph.fadjlist[idx][newpos] = old
+    end
+    return flag
+end
