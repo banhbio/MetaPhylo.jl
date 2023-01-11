@@ -55,6 +55,6 @@ jobs:
       - run: |
           julia --project=docs -e '
             using Documenter: DocMeta, doctest
-            using MetaPhyTrees
-            DocMeta.setdocmeta!(MetaPhyTrees, :DocTestSetup, :(using MetaPhyTrees); recursive=true)
-            doctest(MetaPhyTrees)'
+            using MetaPhylo
+            DocMeta.setdocmeta!(MetaPhylo, :DocTestSetup, :(using MetaPhylo); recursive=true)
+            doctest(MetaPhylo)'

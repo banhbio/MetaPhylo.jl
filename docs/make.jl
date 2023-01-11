@@ -1,16 +1,16 @@
-using MetaPhyTrees
+using MetaPhylo
 using Documenter
 
-DocMeta.setdocmeta!(MetaPhyTrees, :DocTestSetup, :(using MetaPhyTrees); recursive=true)
+DocMeta.setdocmeta!(MetaPhylo, :DocTestSetup, :(using MetaPhylo); recursive=true)
 
 makedocs(;
-    modules=[MetaPhyTrees],
+    modules=[MetaPhylo],
     authors="banhbio <ban@kuicr.kyoto-u.ac.jp> and contributors",
-    repo="https://github.com/banhbio/MetaPhyTrees.jl/blob/{commit}{path}#{line}",
-    sitename="MetaPhyTrees.jl",
+    repo="https://github.com/banhbio/MetaPhylo.jl/blob/{commit}{path}#{line}",
+    sitename="MetaPhylo.jl",
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", "false") == "true",
-        canonical="https://banhbio.github.io/MetaPhyTrees.jl",
+        canonical="https://banhbio.github.io/MetaPhylo.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -20,6 +20,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/banhbio/MetaPhyTrees.jl",
+    repo="github.com/banhbio/MetaPhylo.jl",
     devbranch="main",
 )

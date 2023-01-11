@@ -1,7 +1,7 @@
-using MetaPhyTrees
-using MetaPhyTrees.AbstractTrees
-using MetaPhyTrees.Graphs
-using MetaPhyTrees.AxisArrays
+using MetaPhylo
+using MetaPhylo.AbstractTrees
+using MetaPhylo.Graphs
+using MetaPhylo.AxisArrays
 using Test
 
 #TODO: Think more
@@ -42,16 +42,16 @@ using Test
     ]
 
     for newick in newicks
-        @test try_parse(newick, MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+        @test try_parse(newick, MetaPhylo.Tree{Int, UnRooted, ReRootable})
     end
 
     for newick in err_newicks
-        @test !try_parse(newick, MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+        @test !try_parse(newick, MetaPhylo.Tree{Int, UnRooted, ReRootable})
     end
 end
 
 @testset "indexing" begin
-    tree = parse_newick("(((,),(,)),(,),);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("(((,),(,)),(,),);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
     @test AbstractTrees.childindices(tree, 1) == [2,9,12]
     @test AbstractTrees.childindices(tree, 4) == []
@@ -67,7 +67,7 @@ end
 
 @testset "trees.jl" begin
 
-    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4, D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4, D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
     @test tree[1] == Dict{Symbol, Any}()
     @test tree[3] == Dict{Symbol, Any}(:label => "A")
@@ -112,8 +112,8 @@ end
     @test !isinternal(tree, Edge(2,3))
     @test !isinternal(tree, Edge(99, 100))
 
-    @test MetaPhyTrees.findpath(tree, 1, 4) == [1, 2, 4]
-    @test isnothing(MetaPhyTrees.findpath(tree, 5, 4))
+    @test MetaPhylo.findpath(tree, 1, 4) == [1, 2, 4]
+    @test isnothing(MetaPhylo.findpath(tree, 5, 4))
 
     #TODO: Add function to validate tree
     t = copy(tree)
@@ -157,7 +157,7 @@ end
 
 @testset "distance.jl" begin
 
-    tree = parse_newick("((A:0.1,B:0.2):0.3,((C:0.4, D:0.5):0.6,E:0.7):0.8,F:0.9);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("((A:0.1,B:0.2):0.3,((C:0.4, D:0.5):0.6,E:0.7):0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
     @test distance(tree, Edge(2,3)) == 0.1
     @test distance(tree, 3, 4) == 0.1 + 0.2
@@ -166,7 +166,7 @@ end
     @test treelength(tree, 2) == 0.2 
     @test treelength(tree, 3) == Float64(0)
 
-    tree = Newick.parse_newick("((A:1,B:2):3,(C:4,D:5):6,E:7);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = Newick.parse_newick("((A:1,B:2):3,(C:4,D:5):6,E:7);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
     @test distance_matrix(tree) == AxisArray(
                                    [0.0 3.0 14.0 15.0 11.0;
                                     3.0 0.0 15.0 16.0 12.0;
@@ -177,7 +177,7 @@ end
                                     Axis{:y}([3,4,6,7,8])
                                    )
 
-    tree = parse_newick("((,),((,),),);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("((,),((,),),);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
     @test_throws KeyError distance(tree, Edge(2,3))
     @test_throws KeyError distance(tree, 3, 4)
     @test_throws KeyError treelength(tree, 2) 
@@ -185,11 +185,11 @@ end
 end
 
 @testset "show.jl" begin
-    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
     @test sprint(show, tree) ==
         """
-        MetaPhyTrees.Tree with 6 leaves.
+        MetaPhylo.Tree with 6 leaves.
             Rooted: false
             Rerootable: true
         """

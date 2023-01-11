@@ -1,6 +1,6 @@
 module Newick
     
-using MetaPhyTrees
+using MetaPhylo
 using Graphs
 using AbstractTrees
 export parse_newick
@@ -50,7 +50,7 @@ AbstractTrees.NodeType(::Type{Dict{Symbol}}) = HasNodeType()
 AbstractTrees.children(dict::Dict{Symbol}) = get(dict, :descendants, Any[])
 AbstractTrees.nodetype(::Type{Dict{Symbol}}) = Dict{Symbol}
 
-function parse_newick(input::AbstractString, T::Type{<:MetaPhyTrees.Tree{Code, rooted, rerootable}}) where {Code, rooted, rerootable}
+function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, rooted, rerootable}}) where {Code, rooted, rerootable}
     parsed_tree = Lerche.parse(parser, input) # return tree in Dict{Symbol, Any}
 
     #TODO: push!() might be slow.

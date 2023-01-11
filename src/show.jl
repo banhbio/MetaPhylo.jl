@@ -2,7 +2,7 @@ function Base.show(io::IO, tree::Tree)
     print(
         io,
         """
-        MetaPhyTrees.Tree with $(length(leaves(tree))) leaves.
+        MetaPhylo.Tree with $(length(leaves(tree))) leaves.
             Rooted: $(isrooted(tree))
             Rerootable: $(isrerootable(tree))
         """

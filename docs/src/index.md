@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = MetaPhyTrees
+CurrentModule = MetaPhylo
 ```
 
-# MetaPhyTrees
+# MetaPhylo
 
-Documentation for [MetaPhyTrees](https://github.com/banhbio/MetaPhyTrees.jl).
+Documentation for [MetaPhylo](https://github.com/banhbio/MetaPhylo.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [MetaPhyTrees]
+Modules = [MetaPhylo]
 ```

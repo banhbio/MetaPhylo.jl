@@ -1,4 +1,4 @@
-module MetaPhyTrees
+module MetaPhylo
 
 using Graphs
 using Graphs.SimpleGraphs:SimpleGraphs, fadj, badj
