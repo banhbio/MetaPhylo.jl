@@ -216,3 +216,11 @@ function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
     end
     return reverse(ancestors_idx)
 end
+
+"""
+    common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+Return the common ancestor index of two specified `idx1` and `idx2` nodes.
+"""
+function common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+    intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
+end
