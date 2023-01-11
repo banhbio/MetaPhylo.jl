@@ -46,3 +46,21 @@ using Test
         @test !try_parse(newick, MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
     end
 end
+
+@testset "indexing" begin
+    using MetaPhyTrees.AbstractTrees
+
+    tree = parse_newick("(((,),(,)),(,),);", MetaPhyTrees.Tree{Int, UnRooted, ReRootable})
+
+    @test AbstractTrees.childindices(tree, 1) == [2,9,12]
+    @test AbstractTrees.childindices(tree, 4) == []
+    @test isnothing(AbstractTrees.parentindex(tree, 1))
+    @test AbstractTrees.parentindex(tree, 2) == 1
+    @test isnothing(AbstractTrees.nextsiblingindex(tree, 1))
+    @test AbstractTrees.nextsiblingindex(tree, 2) == 9
+    @test isnothing(AbstractTrees.nextsiblingindex(tree, 11))
+    @test isnothing(AbstractTrees.prevsiblingindex(tree, 2))
+    @test AbstractTrees.prevsiblingindex(tree, 11) == 10
+    @test AbstractTrees.rootindex(tree) == 1
+end
+
