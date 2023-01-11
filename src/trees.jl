@@ -66,7 +66,7 @@ isinternal(tree::Tree, edge::Edge) = haskey(tree, edge) && !isleaf(tree, edge)
     reindex!(tree::Tree)
 Reindex the `tree` in `PreOderDFS` order from the root. 
 """
-function reindex!(tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable}
+function reindex!(tree::Tree{Code}) where {Code}
     counterpart = Dict{Code, Code}()
 
     edges = Edge{Code}[]
@@ -111,9 +111,9 @@ end
     reroot!(tree::Tree, idx::Integer)
 Reroot the `tree` at the specified node. Return `true` if rerooting success.
 """
-function reroot!(tree::Tree, idx::Integer)
-    @assert isrerootable(tree)
+reroot!(::Tree{Code, Root, NotReRootable}) where {Code, Root} = error("The tree is not rerootable")
 
+function reroot!(tree::Tree{Code, Root, ReRootable}, idx::Integer) where {Code, Root}
     isleaf(tree, idx) && error("Leaf nodes are not allowed to reroot")
     path = findpath(tree, rootindex(tree), idx)
     @assert !isnothing(path)
