@@ -22,3 +22,5 @@ isrooted(tree::Tree) = isrooted(typeof(tree))
 isrerootable(::Type{<:Tree{Code, rooted, ReRootable}}) where {Code, rooted} = true
 isrerootable(::Type{<:Tree{Code, rooted, NotReRootable}}) where {Code, rooted} = false
 isrerootable(tree::Tree) = isrerootable(typeof(tree))
+
+Base.copy(t::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable} = Tree{Code, rooted, rerootable}(copy(t.graph), t.root, deepcopy(t.node_data), deepcopy(t.branch_data))
