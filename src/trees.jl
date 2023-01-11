@@ -62,3 +62,33 @@ Return `true` if the `edge` is both connected to internal nodes of the `tree`.
 """
 isinternal(tree::Tree, edge::Edge) = haskey(tree, edge) && !isleaf(tree, edge)
 
+"""
+    reindex!(tree::Tree)
+Reindex the `tree` in `PreOderDFS` order from the root. 
+"""
+function reindex!(tree::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable}
+    counterpart = Dict{Code, Code}()
+
+    edges = Edge{Code}[]
+    node_data = Pair{Code, Dict{Symbol, Any}}[]
+    branch_data = Pair{Edge{Code}, Dict{Symbol, Any}}[]
+    
+    for (new_index, idx_node) in enumerate(PreOrderDFS(IndexNode(tree)))
+        old_index = idx_node.index
+        counterpart[old_index] = new_index
+        push!(node_data, new_index=>tree.node_data[old_index])
+        pold_index = parentindex(tree, old_index)
+        isnothing(pold_index) && continue 
+        pnew_index = counterpart[pold_index]
+        old_edge = Edge{Code}(pold_index, old_index)
+        new_edge = Edge{Code}(pnew_index, new_index)
+        push!(edges, new_edge)
+        push!(branch_data, new_edge=>tree.branch_data[old_edge])
+    end
+    graph = DiGraph(edges)
+    tree.graph = graph
+    tree.root = 1
+    tree.node_data = Dict(node_data)
+    tree.branch_data = Dict(branch_data)
+    return true
+end
