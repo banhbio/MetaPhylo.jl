@@ -85,4 +85,15 @@ function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, root
     return T(graph, 1, Dict(node_data), Dict(branch_data))
 end
 
+struct File
+    path::String
+end
+
+function (T::Type{<:MetaPhylo.Tree})(file::File)
+    open(file.path) do f
+        line = readline(f)
+        parse_newick(line, T)
+    end
+end
+
 end #module
