@@ -9,7 +9,7 @@ end
 Return distance between two nodes on a tree. 
 The `Tree` branch types must have the `Length` trait.
 """
-function distance(tree::AbstractPhyloTree{Code, rooted, rerootable}, idx1::Integer, idx2::Integer; kwargs...) where {Code, rooted, rerootable}
+function distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer; kwargs...)
     idx1 == idx2 && return 0.0
     ca = common_ancestor(tree, idx1, idx2)
     map([idx1, idx2]) do idx
