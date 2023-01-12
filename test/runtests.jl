@@ -191,8 +191,7 @@ end
         """
         MetaPhylo.Tree with 6 leaves.
             Rooted: false
-            Rerootable: true
-        """
+            Rerootable: true"""
 
     @test AbstractTrees.repr_tree(tree) == 
         """
