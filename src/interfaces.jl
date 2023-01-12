@@ -12,8 +12,8 @@ Base.getindex(tree::Tree, idx::Integer, ::Colon) = IndexNode(tree, idx)
 Base.getindex(tree::Tree, ::Colon) = IndexNode(tree)
 
 """
-    parent_edge(tree::Tree, idx::Integer)
-Return the edge between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
+    parent_branch(tree::Tree, idx::Integer)
+Return the baranch (edge) between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
 """
 function parent_edge(tree::Tree{Code}, idx::Integer) where {Code}
     pidx = parentindex(tree, idx)
