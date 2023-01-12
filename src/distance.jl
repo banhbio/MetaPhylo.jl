@@ -1,6 +1,6 @@
-function distance(tree::Tree, edge::Edge)
+function distance(tree::Tree, edge::Edge; length_key=:length)
     branch = tree[edge]
-    return convert(Float64, branch[:length])
+    return convert(Float64, branch[length_key])
 end
 
 """
@@ -8,13 +8,13 @@ end
 Return distance between two nodes on a tree. 
 The `Tree` branch types must have the `Length` trait.
 """
-function distance(tree::Tree{Code, rooted, rerootable}, idx1::Integer, idx2::Integer) where {Code, rooted, rerootable}
+function distance(tree::Tree{Code, rooted, rerootable}, idx1::Integer, idx2::Integer; kwargs...) where {Code, rooted, rerootable}
     idx1 == idx2 && return 0.0
     ca = common_ancestor(tree, idx1, idx2)
     map([idx1, idx2]) do idx
         path = findpath(tree, ca, idx)
         edges = Edge.(path[1:end-1], path[2:end])
-        distances = distance.(Ref(tree), edges)
+        distances = distance.(Ref(tree), edges; kwargs...)
     end |> Iterators.flatten |> sum
 end
 
@@ -23,9 +23,9 @@ end
 Return pairwise distances between all leaves on the `tree` in a `AxisArray`.
 The `Tree` branch types must have the `Length` trait.
 """
-function distance_matrix(tree::Tree)
+function distance_matrix(tree::Tree; kwargs...)
     ls = leaves(tree)
-    return AxisArray([distance(tree, idx1, idx2) for idx1 in ls, idx2 in ls], Axis{:x}(ls), Axis{:y}(ls))
+    return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in ls, idx2 in ls], Axis{:x}(ls), Axis{:y}(ls))
 end
 
 #TODO: Is it correct terminology?
@@ -36,9 +36,9 @@ The `Tree` branch types must have the `Length` trait. See also `treeheight`.
 """
 treelength(tree::Tree) = treelength(tree, rootindex(tree))
 
-function treelength(tree::Tree, idx::Integer)
+function treelength(tree::Tree, idx::Integer; kwargs...)
     ls = leaves(tree, idx)
     map(ls) do leave
-        distance(tree, idx, leave)
+        distance(tree, idx, leave; kwargs...)
     end |> maximum
 end

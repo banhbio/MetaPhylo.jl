@@ -8,6 +8,7 @@ AbstractTrees = "1520ce14-60c1-5f80-bbc7-55ef81b5835c"
 AxisArrays = "39de3d68-74b9-583c-8d2d-e117c070f3a9"
 Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 Lerche = "d42ef402-04e6-4356-9f73-091573ea58dc"
+Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
 Graphs = "1"
