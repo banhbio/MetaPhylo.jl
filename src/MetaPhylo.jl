@@ -7,7 +7,7 @@ using AxisArrays
 
 include("types.jl")
 include("indexing.jl")
-include("trees.jl")
+include("interfaces.jl")
 include("distance.jl")
 include("show.jl")
 
