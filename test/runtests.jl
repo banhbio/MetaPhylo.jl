@@ -91,8 +91,8 @@ end
     @test tree[1,2] == Dict(:length => 0.7, :value => 90)
     @test tree[Edge(1,10)] == Dict(:length => 1.9)
 
-    @test @inferred(Nothing, parent_edge(tree, 2)) == Edge(1,2)
-    @test @inferred(isnothing(parent_edge(tree, 1)))
+    @test @inferred(Nothing, parent_branch(tree, 2)) == Edge(1,2)
+    @test @inferred(isnothing(parent_branch(tree, 1)))
 
     @test @inferred(leaves(tree)) == [3, 4, 7, 8, 9, 10]
     @test @inferred(leaves(tree, 2)) == [3, 4]
