@@ -11,6 +11,8 @@ Lerche = "d42ef402-04e6-4356-9f73-091573ea58dc"
 
 [compat]
 AxisArrays = "0.4"
+AbstractTrees = "0.4"
+Lerche = "0.5"
 julia = "1"
 
 [extras]
