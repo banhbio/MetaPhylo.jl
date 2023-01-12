@@ -15,7 +15,7 @@ Base.getindex(tree::Tree, ::Colon) = IndexNode(tree)
     parent_branch(tree::Tree, idx::Integer)
 Return the baranch (edge) between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
 """
-function parent_edge(tree::Tree{Code}, idx::Integer) where {Code}
+function parent_branch(tree::Tree{Code}, idx::Integer) where {Code}
     pidx = parentindex(tree, idx)
     return isnothing(pidx) ? nothing : Edge{Code}(pidx, idx)
 end
@@ -31,7 +31,7 @@ leaves(tree::Tree) = leaves(tree, rootindex(tree))
     leafedges(tree::Tree, [idx::Integer])
 Return the edges of all edges connected to the leaves in the `tree`. If the index is specified, this returns the edges connected to its leaves in the `tree`.
 """
-leafedges(tree::Tree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_edge(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
+leafedges(tree::Tree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_branch(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
 leafedges(tree::Tree) = leafedges(tree, rootindex(tree))
 
 """
