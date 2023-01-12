@@ -143,8 +143,8 @@ function reindex!(tree::Tree{Code}) where {Code}
     graph = DiGraph(edges)
     tree.graph = graph
     tree.root = 1
-    tree.node_data = Dict(node_data)
     tree.branch_data = Dict(branch_data)
+    tree.node_data = Dict(node_data)
     return true
 end
 
