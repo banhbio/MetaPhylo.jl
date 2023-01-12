@@ -50,7 +50,7 @@ using Test
     end
 end
 
-@testset "indexing" begin
+@testset "indexing.jl" begin
     tree = parse_newick("(((,),(,)),(,),);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
     @test AbstractTrees.childindices(tree, 1) == [2,9,12]
@@ -65,7 +65,7 @@ end
     @test AbstractTrees.rootindex(tree) == 1
 end
 
-@testset "trees.jl" begin
+@testset "interfaces.jl" begin
 
     tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4, D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 
@@ -91,8 +91,8 @@ end
     @test tree[1,2] == Dict(:length => 0.7, :value => 90)
     @test tree[Edge(1,10)] == Dict(:length => 1.9)
 
-    @test @inferred(Nothing, parent_edge(tree, 2)) == Edge(1,2)
-    @test @inferred(isnothing(parent_edge(tree, 1)))
+    @test @inferred(Nothing, parent_branch(tree, 2)) == Edge(1,2)
+    @test @inferred(isnothing(parent_branch(tree, 1)))
 
     @test @inferred(leaves(tree)) == [3, 4, 7, 8, 9, 10]
     @test @inferred(leaves(tree, 2)) == [3, 4]

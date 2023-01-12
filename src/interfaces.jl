@@ -8,18 +8,14 @@ Base.haskey(tree::Tree, idx::Integer) = haskey(tree.node_data, idx)
 Base.haskey(tree::Tree, edge::Edge) = haskey(tree.branch_data, edge)
 Base.haskey(tree::Tree, idx1::Integer, idx2::Integer) = haskey(tree, Edge(idx1, idx2))
 
-Base.setindex!(tree::Tree, data, idx::Integer) = setindex!(tree.node_data, data, idx)
-Base.setindex!(tree::Tree, data, edge::Edge) = setindex!(tree.branch_data, data, edge)
-Base.setindex!(tree::Tree, data, idx1::Integer, idx2::Integer) = setindex!(tree.branch_data, data, Edge(idx1, idx2))
-
 Base.getindex(tree::Tree, idx::Integer, ::Colon) = IndexNode(tree, idx)
 Base.getindex(tree::Tree, ::Colon) = IndexNode(tree)
 
 """
-    parent_edge(tree::Tree, idx::Integer)
-Return the edge between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
+    parent_branch(tree::Tree, idx::Integer)
+Return the baranch (edge) between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
 """
-function parent_edge(tree::Tree{Code}, idx::Integer) where {Code}
+function parent_branch(tree::Tree{Code}, idx::Integer) where {Code}
     pidx = parentindex(tree, idx)
     return isnothing(pidx) ? nothing : Edge{Code}(pidx, idx)
 end
@@ -35,7 +31,7 @@ leaves(tree::Tree) = leaves(tree, rootindex(tree))
     leafedges(tree::Tree, [idx::Integer])
 Return the edges of all edges connected to the leaves in the `tree`. If the index is specified, this returns the edges connected to its leaves in the `tree`.
 """
-leafedges(tree::Tree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_edge(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
+leafedges(tree::Tree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_branch(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
 leafedges(tree::Tree) = leafedges(tree, rootindex(tree))
 
 """
@@ -61,6 +57,65 @@ isinternal(tree::Tree, idx::Integer) = haskey(tree, idx) && !isleaf(tree, idx)
 Return `true` if the `edge` is both connected to internal nodes of the `tree`.
 """
 isinternal(tree::Tree, edge::Edge) = haskey(tree, edge) && !isleaf(tree, edge)
+
+#TODO: Is it the best way?
+function findpath(tree::Tree{Code}, sidx::Integer, tidx::Integer) where {Code<:Integer}
+    nodes = Code[]
+    while true
+        pidx = parentindex(tree, tidx)
+        push!(nodes, tidx)
+        tidx == sidx && break
+        isnothing(pidx) && return nothing
+        tidx = pidx
+    end
+    reverse!(nodes)
+    return nodes
+end
+
+"""
+    AbstractTrees.treebreadth(tree::Tree)
+Return the number of leaves in the `tree`.
+"""
+AbstractTrees.treebreadth(tree::Tree) = treebreadth(IndexNode(tree))
+
+"""
+    AbstractTrees.treeheight(tree::Tree)
+Return the maximum depth from the root to the leaves in the tree. See also `treelength`.
+"""
+AbstractTrees.treeheight(tree::Tree) = treeheight(IndexNode(tree))
+
+"""
+    AbstractTrees.treesize(tree::Tree)
+Return the size og the tree.
+"""
+AbstractTrees.treesize(tree::Tree) = treesize(IndexNode(tree))
+
+"""
+    ancestors(tree::Tree, idx::Integer)
+Return the indices of all ancestor nodes of the specified `idx` node.
+"""
+function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
+    idx_node = IndexNode(tree, idx)
+    ancestors_idx = Code[]
+    while true
+        push!(ancestors_idx, idx_node.index)
+        idx_node = AbstractTrees.parent(idx_node)
+        isnothing(idx_node) && break
+    end
+    return reverse(ancestors_idx)
+end
+
+"""
+    common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+Return the common ancestor index of two specified `idx1` and `idx2` nodes.
+"""
+function common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+    intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
+end
+
+Base.setindex!(tree::Tree, data, idx::Integer) = setindex!(tree.node_data, data, idx)
+Base.setindex!(tree::Tree, data, edge::Edge) = setindex!(tree.branch_data, data, edge)
+Base.setindex!(tree::Tree, data, idx1::Integer, idx2::Integer) = setindex!(tree.branch_data, data, Edge(idx1, idx2))
 
 """
     reindex!(tree::Tree)
@@ -91,20 +146,6 @@ function reindex!(tree::Tree{Code}) where {Code}
     tree.node_data = Dict(node_data)
     tree.branch_data = Dict(branch_data)
     return true
-end
-
-#TODO: Is it the best way?
-function findpath(tree::Tree{Code}, sidx::Integer, tidx::Integer) where {Code<:Integer}
-    nodes = Code[]
-    while true
-        pidx = parentindex(tree, tidx)
-        push!(nodes, tidx)
-        tidx == sidx && break
-        isnothing(pidx) && return nothing
-        tidx = pidx
-    end
-    reverse!(nodes)
-    return nodes
 end
 
 """
@@ -183,47 +224,6 @@ function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
 end
 ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
 ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
-
-"""
-    AbstractTrees.treebreadth(tree::Tree)
-Return the number of leaves in the `tree`.
-"""
-AbstractTrees.treebreadth(tree::Tree) = treebreadth(IndexNode(tree))
-
-"""
-    AbstractTrees.treeheight(tree::Tree)
-Return the maximum depth from the root to the leaves in the tree. See also `treelength`.
-"""
-AbstractTrees.treeheight(tree::Tree) = treeheight(IndexNode(tree))
-
-"""
-    AbstractTrees.treesize(tree::Tree)
-Return the size og the tree.
-"""
-AbstractTrees.treesize(tree::Tree) = treesize(IndexNode(tree))
-
-"""
-    ancestors(tree::Tree, idx::Integer)
-Return the indices of all ancestor nodes of the specified `idx` node.
-"""
-function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
-    idx_node = IndexNode(tree, idx)
-    ancestors_idx = Code[]
-    while true
-        push!(ancestors_idx, idx_node.index)
-        idx_node = AbstractTrees.parent(idx_node)
-        isnothing(idx_node) && break
-    end
-    return reverse(ancestors_idx)
-end
-
-"""
-    common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
-Return the common ancestor index of two specified `idx1` and `idx2` nodes.
-"""
-function common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
-    intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
-end
 
 function add_child!(tree::Tree, idx::Integer, bi::Dict{Symbol, Any}, ni::Dict{Symbol, Any})
     !haskey(tree, idx) && return false
