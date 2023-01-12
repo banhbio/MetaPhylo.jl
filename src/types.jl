@@ -8,9 +8,9 @@ abstract type ReRootablilty end
 struct ReRootable <: ReRootablilty end
 struct NotReRootable <: ReRootablilty end
 
-abstract type AbstractPhyloTree{Code<:Integer, rooted<:RootState, rerootable<:ReRootablilty} end
+abstract type AbstractPhyloTree{Code<:Integer, rooted<:RootState} end
 
-mutable struct Tree{Code<:Integer, rooted<:RootState, rerootable<:ReRootablilty} <: AbstractPhyloTree{Code, rooted, rerootable}
+mutable struct Tree{Code<:Integer, rooted<:RootState, rerootable<:ReRootablilty} <: AbstractPhyloTree{Code, rooted}
     graph::DiGraph{Code}
     root::Code
     branch_data::Dict{Edge{Code}, Dict{Symbol, Any}}
@@ -19,14 +19,14 @@ end
 
 Base.copy(t::Tree{Code, rooted, rerootable}) where {Code, rooted, rerootable} = Tree{Code, rooted, rerootable}(copy(t.graph), t.root, deepcopy(t.branch_data), deepcopy(t.node_data))
 
-struct StaticTree{Code<:Integer, rooted<:RootState, rerootable<:ReRootablilty, BI<:NamedTuple, NI<:NamedTuple} <: AbstractPhyloTree{Code, rooted, rerootable}
+struct StaticTree{Code<:Integer, rooted<:RootState, BI<:NamedTuple, NI<:NamedTuple} <: AbstractPhyloTree{Code, rooted}
     graph::StaticDiGraph{Code,Code}
     root::Code
     branch_data::Dict{Edge{Code}, BI}
     node_data::Dict{Code, NI}
 end
 
-function freeze(tree::Tree{_, rooted, rerootable}) where {_, rooted, rerootable}
+function freeze(tree::Tree{_, rooted}) where {_, rooted}
     static_graph = StaticDiGraph(tree.graph)
     Code = eltype(static_graph)
 
@@ -48,10 +48,10 @@ function freeze(tree::Tree{_, rooted, rerootable}) where {_, rooted, rerootable}
     BI = eltype(new_branch_values)
     new_branch_data = Dict(Pair.(new_branch_keys, new_branch_values))
 
-    return StaticTree{Code, rooted, rerootable, BI, NI}(static_graph, Code(tree.root), new_branch_data, new_node_data)
+    return StaticTree{Code, rooted, BI, NI}(static_graph, Code(tree.root), new_branch_data, new_node_data)
 end
 
-Base.copy(t::StaticTree{Code, rooted, rerootable, BI, NI}) where {Code, rooted, rerootable, BI, NI} = StaticTree{Code, rooted, rerootable, BI, NI}(copy(t.graph), t.root, deepcopy(t.branch_data), deepcopy(t.node_data)) 
+Base.copy(t::StaticTree{Code, rooted, BI, NI}) where {Code, rooted, BI, NI} = StaticTree{Code, rooted, rerootable, BI, NI}(copy(t.graph), t.root, deepcopy(t.branch_data), deepcopy(t.node_data)) 
 
 isrooted(::Type{<:AbstractPhyloTree{Code, Rooted}}) where {Code} = true
 isrooted(::Type{<:AbstractPhyloTree{Code, UnRooted}}) where {Code} = false
