@@ -11,7 +11,6 @@ include("interfaces.jl")
 include("distance.jl")
 include("show.jl")
 
-
 #export type utils
 export Rooted, UnRooted, ReRootable, NotReRooteble, isrooted, isrerootable
 
