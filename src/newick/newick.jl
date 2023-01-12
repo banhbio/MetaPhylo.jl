@@ -1,8 +1,6 @@
 module Newick
     
 using MetaPhylo
-using Graphs
-using AbstractTrees
 export parse_newick
 
 # define parser
