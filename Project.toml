@@ -10,6 +10,7 @@ Graphs = "86223c79-3864-5bf0-83f7-82e725a168b6"
 Lerche = "d42ef402-04e6-4356-9f73-091573ea58dc"
 
 [compat]
+Graphs = "1"
 AxisArrays = "0.4"
 AbstractTrees = "0.4"
 Lerche = "0.5"
