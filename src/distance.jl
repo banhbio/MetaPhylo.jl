@@ -3,6 +3,7 @@ function distance(tree::AbstractPhyloTree, edge::Edge; length_key=:length)
     return branch[length_key]
 end
 
+#TODO: fix returned type
 """
     distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
 Return distance between two nodes on a tree. 
