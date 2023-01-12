@@ -1,65 +1,65 @@
 # basic index interface
 #TODO: Do we need to restrict access to node and branch that do not exist in the graph?
-Base.getindex(tree::Tree, idx::Integer) = tree.node_data[idx]
-Base.getindex(tree::Tree, edge::Edge) = tree.branch_data[edge]
-Base.getindex(tree::Tree, idx1::Integer, idx2::Integer) = getindex(tree, Edge(idx1, idx2))
+Base.getindex(tree::AbstractPhyloTree, idx::Integer) = tree.node_data[idx]
+Base.getindex(tree::AbstractPhyloTree, edge::Edge) = tree.branch_data[edge]
+Base.getindex(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer) = getindex(tree, Edge(idx1, idx2))
 
-Base.haskey(tree::Tree, idx::Integer) = haskey(tree.node_data, idx)
-Base.haskey(tree::Tree, edge::Edge) = haskey(tree.branch_data, edge)
-Base.haskey(tree::Tree, idx1::Integer, idx2::Integer) = haskey(tree, Edge(idx1, idx2))
+Base.haskey(tree::AbstractPhyloTree, idx::Integer) = haskey(tree.node_data, idx)
+Base.haskey(tree::AbstractPhyloTree, edge::Edge) = haskey(tree.branch_data, edge)
+Base.haskey(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer) = haskey(tree, Edge(idx1, idx2))
 
-Base.getindex(tree::Tree, idx::Integer, ::Colon) = IndexNode(tree, idx)
-Base.getindex(tree::Tree, ::Colon) = IndexNode(tree)
+Base.getindex(tree::AbstractPhyloTree, idx::Integer, ::Colon) = IndexNode(tree, idx)
+Base.getindex(tree::AbstractPhyloTree, ::Colon) = IndexNode(tree)
 
 """
-    parent_branch(tree::Tree, idx::Integer)
+    parent_branch(tree::AbstractPhyloTree, idx::Integer)
 Return the baranch (edge) between the specified `idx` node and its parent node. If the node is root, this returns `nothing` 
 """
-function parent_branch(tree::Tree{Code}, idx::Integer) where {Code}
+function parent_branch(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code}
     pidx = parentindex(tree, idx)
     return isnothing(pidx) ? nothing : Edge{Code}(pidx, idx)
 end
 
 """
-    leaves(tree::Tree, [idx::Integer])
+    leaves(tree::AbstractPhyloTree, [idx::Integer])
 Return the indices of all leaves in the `tree`. If the index is specified, this returns the indices of leaves in its subtree.
 """
-leaves(tree::Tree, idx::Integer) = nodevalue.(Leaves(IndexNode(tree, idx)))
-leaves(tree::Tree) = leaves(tree, rootindex(tree))
+leaves(tree::AbstractPhyloTree, idx::Integer) = nodevalue.(Leaves(IndexNode(tree, idx)))
+leaves(tree::AbstractPhyloTree) = leaves(tree, rootindex(tree))
 
 """
-    leafedges(tree::Tree, [idx::Integer])
+    leafedges(tree::AbstractPhyloTree, [idx::Integer])
 Return the edges of all edges connected to the leaves in the `tree`. If the index is specified, this returns the edges connected to its leaves in the `tree`.
 """
-leafedges(tree::Tree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_branch(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
-leafedges(tree::Tree) = leafedges(tree, rootindex(tree))
+leafedges(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code} = Vector{Edge{Code}}([parent_branch(tree, lf) for lf in leaves(tree, idx) if rootindex(tree) != lf])
+leafedges(tree::AbstractPhyloTree) = leafedges(tree, rootindex(tree))
 
 """
-    isleaf(tree::Tree, idx::Integer)
+    isleaf(tree::AbstractPhyloTree, idx::Integer)
 Return `true` if the `idx` is contained in a leaf node of the `tree`.
 """
-isleaf(tree::Tree, idx::Integer) = haskey(tree, idx) && idx in leaves(tree)
+isleaf(tree::AbstractPhyloTree, idx::Integer) = haskey(tree, idx) && idx in leaves(tree)
 
 """
-    isleaf(tree::Tree, edge::Edge)
+    isleaf(tree::AbstractPhyloTree, edge::Edge)
 Return `true` if the `edge` is connected to a leaf node of the `tree`.
 """
-isleaf(tree::Tree, edge::Edge) = haskey(tree, edge) && edge in leafedges(tree)
+isleaf(tree::AbstractPhyloTree, edge::Edge) = haskey(tree, edge) && edge in leafedges(tree)
 
 """
-    isinternal(tree::Tree, idx::Integer)
+    isinternal(tree::AbstractPhyloTree, idx::Integer)
 Return `true` if the `idx` is contained in an internal node of the `tree`.
 """
-isinternal(tree::Tree, idx::Integer) = haskey(tree, idx) && !isleaf(tree, idx)
+isinternal(tree::AbstractPhyloTree, idx::Integer) = haskey(tree, idx) && !isleaf(tree, idx)
 
 """
-    isinternal(tree::Tree, idx::Integer)
+    isinternal(tree::AbstractPhyloTree, idx::Integer)
 Return `true` if the `edge` is both connected to internal nodes of the `tree`.
 """
-isinternal(tree::Tree, edge::Edge) = haskey(tree, edge) && !isleaf(tree, edge)
+isinternal(tree::AbstractPhyloTree, edge::Edge) = haskey(tree, edge) && !isleaf(tree, edge)
 
 #TODO: Is it the best way?
-function findpath(tree::Tree{Code}, sidx::Integer, tidx::Integer) where {Code<:Integer}
+function findpath(tree::AbstractPhyloTree{Code}, sidx::Integer, tidx::Integer) where {Code<:Integer}
     nodes = Code[]
     while true
         pidx = parentindex(tree, tidx)
@@ -73,28 +73,28 @@ function findpath(tree::Tree{Code}, sidx::Integer, tidx::Integer) where {Code<:I
 end
 
 """
-    AbstractTrees.treebreadth(tree::Tree)
+    AbstractTrees.treebreadth(tree::AbstractPhyloTree)
 Return the number of leaves in the `tree`.
 """
-AbstractTrees.treebreadth(tree::Tree) = treebreadth(IndexNode(tree))
+AbstractTrees.treebreadth(tree::AbstractPhyloTree) = treebreadth(IndexNode(tree))
 
 """
-    AbstractTrees.treeheight(tree::Tree)
+    AbstractTrees.treeheight(tree::AbstractPhyloTree)
 Return the maximum depth from the root to the leaves in the tree. See also `treelength`.
 """
-AbstractTrees.treeheight(tree::Tree) = treeheight(IndexNode(tree))
+AbstractTrees.treeheight(tree::AbstractPhyloTree) = treeheight(IndexNode(tree))
 
 """
-    AbstractTrees.treesize(tree::Tree)
+    AbstractTrees.treesize(tree::AbstractPhyloTree)
 Return the size og the tree.
 """
-AbstractTrees.treesize(tree::Tree) = treesize(IndexNode(tree))
+AbstractTrees.treesize(tree::AbstractPhyloTree) = treesize(IndexNode(tree))
 
 """
-    ancestors(tree::Tree, idx::Integer)
+    ancestors(tree::AbstractPhyloTree, idx::Integer)
 Return the indices of all ancestor nodes of the specified `idx` node.
 """
-function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
+function ancestors(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code}
     idx_node = IndexNode(tree, idx)
     ancestors_idx = Code[]
     while true
@@ -106,10 +106,10 @@ function ancestors(tree::Tree{Code}, idx::Integer) where {Code}
 end
 
 """
-    common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+    common_ancestor(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
 Return the common ancestor index of two specified `idx1` and `idx2` nodes.
 """
-function common_ancestor(tree::Tree, idx1::Integer, idx2::Integer)
+function common_ancestor(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
     intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
 end
 
