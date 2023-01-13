@@ -8,7 +8,7 @@ Base.haskey(tree::AbstractPhyloTree, idx::Integer) = haskey(tree.node_data, idx)
 Base.haskey(tree::AbstractPhyloTree, edge::Edge) = haskey(tree.branch_data, edge)
 Base.haskey(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer) = haskey(tree, Edge(idx1, idx2))
 
-Base.getindex(tree::AbstractPhyloTree, idx::Integer, ::Colon) = IndexNode(tree, idx)
+Base.getindex(tree::AbstractPhyloTree{Code}, idx::Integer, ::Colon) where {Code} = IndexNode(tree, Code(idx))
 Base.getindex(tree::AbstractPhyloTree, ::Colon) = IndexNode(tree)
 
 """
@@ -24,7 +24,7 @@ end
     leaves(tree::AbstractPhyloTree, [idx::Integer])
 Return the indices of all leaves in the `tree`. If the index is specified, this returns the indices of leaves in its subtree.
 """
-leaves(tree::AbstractPhyloTree, idx::Integer) = nodevalue.(Leaves(IndexNode(tree, idx)))
+leaves(tree::AbstractPhyloTree, idx::Integer) = nodevalue.(Leaves(tree[idx, :]))
 leaves(tree::AbstractPhyloTree) = leaves(tree, rootindex(tree))
 
 """

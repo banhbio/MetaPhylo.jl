@@ -1,4 +1,4 @@
-AbstractTrees.nodevalue(::AbstractPhyloTree, idx::T) where T<:Integer = idx
+AbstractTrees.nodevalue(::AbstractPhyloTree{Code}, idx) where Code = Code(idx)
 
 AbstractTrees.ParentLinks(::Type{<:AbstractPhyloTree}) = StoredParents()
 AbstractTrees.ChildIndexing(::Type{<:AbstractPhyloTree}) = IndexedChildren()
