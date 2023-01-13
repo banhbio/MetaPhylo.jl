@@ -11,10 +11,11 @@ Lerche = "d42ef402-04e6-4356-9f73-091573ea58dc"
 Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 
 [compat]
-Graphs = "1"
-AxisArrays = "0.4"
 AbstractTrees = "0.4"
+AxisArrays = "0.4"
+Graphs = "1"
 Lerche = "0.5"
+Reexport = "1"
 julia = "1"
 
 [extras]
