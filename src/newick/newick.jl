@@ -80,7 +80,7 @@ function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, root
     end
 
     graph = DiGraph(edges)
-    return T(graph, 1, Dict(node_data), Dict(branch_data))
+    return T(graph, 1, Dict(branch_data), Dict(node_data))
 end
 
 struct File

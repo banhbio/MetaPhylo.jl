@@ -1,14 +1,15 @@
-function distance(tree::Tree, edge::Edge; length_key=:length)
+function distance(tree::AbstractPhyloTree, edge::Edge; length_key=:length)
     branch = tree[edge]
-    return convert(Float64, branch[length_key])
+    return branch[length_key]
 end
 
+#TODO: fix returned type
 """
-    distance(tree::Tree, idx1::Integer, idx2::Integer)
+    distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
 Return distance between two nodes on a tree. 
 The `Tree` branch types must have the `Length` trait.
 """
-function distance(tree::Tree{Code, rooted, rerootable}, idx1::Integer, idx2::Integer; kwargs...) where {Code, rooted, rerootable}
+function distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer; kwargs...)
     idx1 == idx2 && return 0.0
     ca = common_ancestor(tree, idx1, idx2)
     map([idx1, idx2]) do idx
@@ -19,24 +20,24 @@ function distance(tree::Tree{Code, rooted, rerootable}, idx1::Integer, idx2::Int
 end
 
 """
-    distance_matrix(tree::Tree)
+    distance_matrix(tree::AbstractPhyloTree)
 Return pairwise distances between all leaves on the `tree` in a `AxisArray`.
 The `Tree` branch types must have the `Length` trait.
 """
-function distance_matrix(tree::Tree; kwargs...)
+function distance_matrix(tree::AbstractPhyloTree; kwargs...)
     ls = leaves(tree)
     return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in ls, idx2 in ls], Axis{:x}(ls), Axis{:y}(ls))
 end
 
 #TODO: Is it correct terminology?
 """
-    treelength(tree::Tree, [idx::Integer])
+    treelength(tree::AbstractPhyloTree, [idx::Integer])
 Return maximum distance from the root to the leaves in the `tree`. If the index is specified, this returns maximum distance from the specified `idx` to its leaves in the `tree`.
 The `Tree` branch types must have the `Length` trait. See also `treeheight`.
 """
-treelength(tree::Tree) = treelength(tree, rootindex(tree))
+treelength(tree::AbstractPhyloTree) = treelength(tree, rootindex(tree))
 
-function treelength(tree::Tree, idx::Integer; kwargs...)
+function treelength(tree::AbstractPhyloTree, idx::Integer; kwargs...)
     ls = leaves(tree, idx)
     map(ls) do leave
         distance(tree, idx, leave; kwargs...)
