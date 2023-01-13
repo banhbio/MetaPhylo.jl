@@ -52,37 +52,78 @@ end
 
 @testset "indexing.jl" begin
     tree = parse_newick("(((,),(,)),(,),);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+    freezed_tree = freeze(tree)
 
-    @test AbstractTrees.childindices(tree, 1) == [2,9,12]
-    @test AbstractTrees.childindices(tree, 4) == []
-    @test isnothing(AbstractTrees.parentindex(tree, 1))
-    @test AbstractTrees.parentindex(tree, 2) == 1
-    @test isnothing(AbstractTrees.nextsiblingindex(tree, 1))
-    @test AbstractTrees.nextsiblingindex(tree, 2) == 9
-    @test isnothing(AbstractTrees.nextsiblingindex(tree, 11))
-    @test isnothing(AbstractTrees.prevsiblingindex(tree, 2))
-    @test AbstractTrees.prevsiblingindex(tree, 11) == 10
-    @test AbstractTrees.rootindex(tree) == 1
+    for t in [tree, freezed_tree]
+        @test AbstractTrees.childindices(t, 1) == [2,9,12]
+        @test AbstractTrees.childindices(t, 4) == []
+        @test isnothing(AbstractTrees.parentindex(t, 1))
+        @test AbstractTrees.parentindex(t, 2) == 1
+        @test isnothing(AbstractTrees.nextsiblingindex(t, 1))
+        @test AbstractTrees.nextsiblingindex(t, 2) == 9
+        @test isnothing(AbstractTrees.nextsiblingindex(t, 11))
+        @test isnothing(AbstractTrees.prevsiblingindex(t, 2))
+        @test AbstractTrees.prevsiblingindex(t, 11) == 10
+        @test AbstractTrees.rootindex(t) == 1
+    end
 end
 
 @testset "interfaces.jl" begin
 
-    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4, D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+    tree = parse_newick("((A:1.1,B:0.2)100:0.3,((C:0.4, D:1.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+    freezed_tree = freeze(tree)
 
     @test tree[1] == Dict{Symbol, Any}()
     @test tree[3] == Dict{Symbol, Any}(:label => "A")
     @test tree[1,2] == tree[Edge(1,2)] == Dict{Symbol, Any}(:length => 0.3, :value => 100)
     @test tree[1,10] == tree[Edge(1,10)] == Dict{Symbol, Any}(:length => 0.9)
 
-    @test tree[:] == IndexNode(tree)
-    @test tree[4, :] == IndexNode(tree, 4)
+    for t in [tree, freezed_tree]
+        @test t[:] == IndexNode(t)
+        @test t[4, :] == IndexNode(t, eltype(t.graph)(4))
 
-    @test haskey(tree, 1)
-    @test haskey(tree, 7)
-    @test !haskey(tree, 99)
-    @test haskey(tree, 1, 2)
-    @test !haskey(tree, 1, 3)
-    @test haskey(tree, Edge(1,2))
+        @test haskey(t, 1)
+        @test haskey(t, 7)
+        @test !haskey(t, 99)
+        @test haskey(t, Edge(1,2))
+        @test haskey(t, 1, 2)
+        @test !haskey(t, 1, 3)
+        @test @inferred(Nothing, parent_branch(t, 2)) == Edge(1,2)
+        @test @inferred(isnothing(parent_branch(t, 1)))
+
+        @test @inferred(leaves(t)) == [3, 4, 7, 8, 9, 10]
+        @test @inferred(leaves(t, 2)) == [3, 4]
+        @test @inferred(leaves(t, 3)) == [3]
+        @test @inferred(!isleaf(t, 1))
+        @test @inferred(!isleaf(t, 99))
+        @test @inferred(isinternal(t, 1))
+        @test @inferred(!isinternal(t, 3))
+        @test @inferred(!isinternal(t, 99))
+
+        # Julia v1.6.7 can not infer type correctly, but v1.7.2 can.
+        @test leafedges(t) == [Edge(2,3), Edge(2,4), Edge(6,7), Edge(6,8), Edge(5,9), Edge(1,10)]
+        @test leafedges(t, 5) == [Edge(6,7), Edge(6,8), Edge(5,9)]
+        @test !isleaf(t, Edge(1,2))
+        @test !isleaf(t, Edge(99, 100))
+        @test isinternal(t, Edge(1,2))
+        @test !isinternal(t, Edge(2,3))
+        @test !isinternal(t, Edge(99, 100))
+
+        @test MetaPhylo.findpath(t, 1, 4) == [1, 2, 4]
+        @test isnothing(MetaPhylo.findpath(t, 5, 4))
+    
+        @test @inferred(treesize(t)) == 10
+        @test @inferred(treesize(t[2,:])) == 3
+        @test @inferred(treebreadth(t)) == 6
+        @test @inferred(treebreadth(t[2,:])) == 2
+        @test @inferred(treebreadth(t[5,:])) == 3
+        @test @inferred(treeheight(t)) == 3
+        @test @inferred(treeheight(t[2,:])) == 1
+        @test @inferred(treeheight(t[5,:])) == 2
+
+        @test @inferred(ancestors(t, 4)) == [1, 2, 4]
+        @test @inferred(common_ancestor(t, 8, 9)) == 5
+    end
 
     tree[3] = Dict(:label =>"a")
     tree[1,2] = Dict(:length => 0.7, :value => 90)
@@ -90,30 +131,6 @@ end
     @test tree[3] == Dict(:label => "a")
     @test tree[1,2] == Dict(:length => 0.7, :value => 90)
     @test tree[Edge(1,10)] == Dict(:length => 1.9)
-
-    @test @inferred(Nothing, parent_branch(tree, 2)) == Edge(1,2)
-    @test @inferred(isnothing(parent_branch(tree, 1)))
-
-    @test @inferred(leaves(tree)) == [3, 4, 7, 8, 9, 10]
-    @test @inferred(leaves(tree, 2)) == [3, 4]
-    @test @inferred(leaves(tree, 3)) == [3]
-    @test @inferred(!isleaf(tree, 1))
-    @test @inferred(!isleaf(tree, 99))
-    @test @inferred(isinternal(tree, 1))
-    @test @inferred(!isinternal(tree, 3))
-    @test @inferred(!isinternal(tree, 99))
-
-    # Julia v1.6.7 can not infer type correctly, but v1.7.2 can.
-    @test leafedges(tree) == [Edge(2,3), Edge(2,4), Edge(6,7), Edge(6,8), Edge(5,9), Edge(1,10)]
-    @test leafedges(tree, 5) == [Edge(6,7), Edge(6,8), Edge(5,9)]
-    @test !isleaf(tree, Edge(1,2))
-    @test !isleaf(tree, Edge(99, 100))
-    @test isinternal(tree, Edge(1,2))
-    @test !isinternal(tree, Edge(2,3))
-    @test !isinternal(tree, Edge(99, 100))
-
-    @test MetaPhylo.findpath(tree, 1, 4) == [1, 2, 4]
-    @test isnothing(MetaPhylo.findpath(tree, 5, 4))
 
     #TODO: Add function to validate tree
     t = copy(tree)
@@ -141,18 +158,6 @@ end
     t = copy(tree)
     @test @inferred(ladderize!(t; left=true))
     @test AbstractTrees.childindices(t, 1) == [5, 2, 10]
-
-    @test @inferred(treesize(tree)) == 10
-    @test @inferred(treesize(tree[2,:])) == 3
-    @test @inferred(treebreadth(tree)) == 6
-    @test @inferred(treebreadth(tree[2,:])) == 2
-    @test @inferred(treebreadth(tree[5,:])) == 3
-    @test @inferred(treeheight(tree)) == 3
-    @test @inferred(treeheight(tree[2,:])) == 1
-    @test @inferred(treeheight(tree[5,:])) == 2
-
-    @test @inferred(ancestors(tree, 4)) == [1, 2, 4]
-    @test @inferred(common_ancestor(tree, 8, 9)) == 5
 end
 
 @testset "distance.jl" begin
