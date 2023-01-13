@@ -95,7 +95,7 @@ AbstractTrees.treesize(tree::AbstractPhyloTree) = treesize(IndexNode(tree))
 Return the indices of all ancestor nodes of the specified `idx` node.
 """
 function ancestors(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code}
-    idx_node = IndexNode(tree, idx)
+    idx_node = tree[idx, :]
     ancestors_idx = Code[]
     while true
         push!(ancestors_idx, idx_node.index)
