@@ -33,7 +33,7 @@ function freeze(tree::Tree{_, rooted}) where {_, rooted}
     node_pairs = collect(tree.node_data)
     new_node_keys = Code.(first.(node_pairs))
     new_node_values_tmp = namedtuple.(last.(node_pairs))
-    new_node_values_fieldnames = intersect(fieldnames.(new_node_values_tmp)...) |> Tuple
+    new_node_values_fieldnames = intersect(unique(fieldnames.(new_node_values_tmp))...) |> Tuple
     new_node_values = select.(new_node_values_tmp, Ref(new_node_values_fieldnames))
 
     NI = eltype(new_node_values)
@@ -42,7 +42,7 @@ function freeze(tree::Tree{_, rooted}) where {_, rooted}
     branch_pairs = collect(tree.branch_data)
     new_branch_keys = Edge{Code}.(first.(branch_pairs))
     new_branch_values_tmp = namedtuple.(last.(branch_pairs))
-    new_branch_values_fieldnames = intersect(fieldnames.(new_branch_values_tmp)...) |> Tuple
+    new_branch_values_fieldnames = intersect(unique(fieldnames.(new_branch_values_tmp))...) |> Tuple
     new_branch_values = select.(new_branch_values_tmp, Ref(new_branch_values_fieldnames))
 
     BI = eltype(new_branch_values)
