@@ -192,6 +192,7 @@ end
 
 @testset "show.jl" begin
     tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+    freezed_tree = freeze(tree)
 
     @test sprint(show, tree) ==
         """
@@ -199,7 +200,7 @@ end
             Rooted: false
             Rerootable: true"""
 
-    @test AbstractTrees.repr_tree(tree) == 
+    @test AbstractTrees.repr_tree(tree) ==
         """
         1: [root] 
         ├─ 2: [value:100.0, length:0.3] 
@@ -211,5 +212,26 @@ end
         │  │  └─ 8: [length:0.5] label:\"D\"
         │  └─ 9: [length:0.7] label:\"E\"
         └─ 10: [length:0.9] label:\"F\"
+        """
+
+    @test sprint(show, freezed_tree) ==
+        """
+        MetaPhylo.StaticTree with 6 leaves.
+            Rooted: false
+            branch_data: NamedTuple{(:length,), Tuple{Float64}}
+            node_data: NamedTuple{(), Tuple{}}"""
+
+    @test AbstractTrees.repr_tree(freezed_tree) ==
+        """
+        1: [root] 
+        ├─ 2: [length:0.3] 
+        │  ├─ 3: [length:0.1] 
+        │  └─ 4: [length:0.2] 
+        ├─ 5: [length:0.8] 
+        │  ├─ 6: [length:0.6] 
+        │  │  ├─ 7: [length:0.4] 
+        │  │  └─ 8: [length:0.5] 
+        │  └─ 9: [length:0.7] 
+        └─ 10: [length:0.9] 
         """
 end
