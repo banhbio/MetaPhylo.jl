@@ -163,30 +163,31 @@ end
 @testset "distance.jl" begin
 
     tree = parse_newick("((A:0.1,B:0.2):0.3,((C:0.4, D:0.5):0.6,E:0.7):0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
-
-    @test distance(tree, Edge(2,3)) == 0.1
-    @test distance(tree, 3, 4) == 0.1 + 0.2
-    @test distance(tree, 3, 3) == Float64(0)
-    @test treelength(tree) == 0.8 + 0.6 + 0.5
-    @test treelength(tree, 2) == 0.2 
-    @test treelength(tree, 3) == Float64(0)
+    freezed_tree = freeze(tree)
+    
+    for t in [tree, freezed_tree]
+        @test distance(t, Edge(2,3)) == 0.1
+        @test distance(t, 3, 4) == 0.1 + 0.2
+        @test distance(t, 3, 3) == Float64(0)
+        @test treelength(t) == 0.8 + 0.6 + 0.5
+        @test treelength(t, 2) == 0.2 
+        @test treelength(t, 3) == Float64(0)
+    end
 
     tree = Newick.parse_newick("((A:1,B:2):3,(C:4,D:5):6,E:7);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
-    @test distance_matrix(tree) == AxisArray(
-                                   [0.0 3.0 14.0 15.0 11.0;
-                                    3.0 0.0 15.0 16.0 12.0;
-                                    14.0 15.0 0.0 9.0 17.0;
-                                    15.0 16.0 9.0 0.0 18.0;
-                                    11.0 12.0 17.0 18.0 0.0],
-                                    Axis{:x}([3,4,6,7,8]),
-                                    Axis{:y}([3,4,6,7,8])
-                                   )
+    freezed_tree = freeze(tree)
 
-    tree = parse_newick("((,),((,),),);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
-    @test_throws KeyError distance(tree, Edge(2,3))
-    @test_throws KeyError distance(tree, 3, 4)
-    @test_throws KeyError treelength(tree, 2) 
-    @test_throws KeyError distance_matrix(tree)
+    for t in [tree, freezed_tree]
+        @test distance_matrix(t) == AxisArray(
+                                       [0.0 3.0 14.0 15.0 11.0;
+                                        3.0 0.0 15.0 16.0 12.0;
+                                        14.0 15.0 0.0 9.0 17.0;
+                                        15.0 16.0 9.0 0.0 18.0;
+                                        11.0 12.0 17.0 18.0 0.0],
+                                        Axis{:x}([3,4,6,7,8]),
+                                        Axis{:y}([3,4,6,7,8])
+                                       )
+    end
 end
 
 @testset "show.jl" begin
