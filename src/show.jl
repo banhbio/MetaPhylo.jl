@@ -15,7 +15,7 @@ function Base.show(io::IO, tree::StaticTree{Code, rooted, BI, NI}) where{Code, r
         MetaPhylo.StaticTree with $(length(leaves(tree))) leaves.
             Rooted: $(isrooted(tree))
             branch_data: $BI
-            Node_data: $NI"""
+            node_data: $NI"""
     )
 end
 AbstractTrees.print_tree(tree::AbstractPhyloTree; kwargs...) = print_tree(IndexNode(tree); kwargs...)
