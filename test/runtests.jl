@@ -235,3 +235,17 @@ end
         └─ 10: [length:0.9] 
         """
 end
+
+@testset "find.jl" begin
+    tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+        
+    @test Set(findnodes(tree, :label => x -> x == "A")) == Set([3])
+    @test Set(findnodes(tree, :label => x -> x == "Z")) == Set([]) 
+    @test Set(findnodes(tree, :dummy => x -> x == "A")) == Set([])
+    @test Set(findnodes(tree, :dummy => x -> x == "A"; ifnot_haskey = true)) == Set(1:nv(tree.graph)) 
+
+    @test Set(findbranches(tree, :length => x -> x > 0.7)) == Set([Edge(1,5), Edge(1,10)])
+    @test Set(findbranches(tree, :length => x -> x < 0)) == Set([]) 
+    @test Set(findbranches(tree, :value => x -> x > 95)) == Set([Edge(1,2), Edge(1,5)])
+    @test Set(findbranches(tree, :value => x -> x > 95; ifnot_haskey = true)) == Set([Edge(1,2), Edge(1,5), Edge(1,10), Edge(2,3), Edge(2,4), Edge(5,9), Edge(6,7), Edge(6,8)])
+end

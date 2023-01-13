@@ -13,6 +13,7 @@ include("indexing.jl")
 include("interfaces.jl")
 include("distance.jl")
 include("show.jl")
+include("find.jl")
 
 #export type utils
 export Rooted, UnRooted, ReRootable, NotReRooteble, freeze, isrooted, isrerootable
@@ -25,6 +26,8 @@ export rootindex, parent_branch, leafedges, leaves, isleaf, isinternal,
 
 #export distance functions
 export distance, distance_matrix, treelength
+
+export findnodes, findbranches
 
 include("newick/newick.jl")
 import ..Newick: parse_newick
