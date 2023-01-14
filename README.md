@@ -56,4 +56,10 @@ julia> @time big_tree = Newick.File("/path/to/big_tree") |> MetaPhylo.Tree{Int, 
 MetaPhylo.Tree with 54327 leaves.
     Rooted: false
     Rerootable: true
+
+julia> freeze(big_tree)
+MetaPhylo.StaticTree with 54327 leaves.
+    Rooted: false
+    branch_data: NamedTuple{(:length,), Tuple{Float64}}
+    node_data: NamedTuple{(), Tuple{}}
 ```
