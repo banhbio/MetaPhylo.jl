@@ -7,7 +7,6 @@ end
 """
     distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
 Return distance between two nodes on a tree. 
-The `Tree` branch types must have the `Length` trait.
 """
 function distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer; kwargs...)
     idx1 == idx2 && return 0.0
@@ -22,7 +21,6 @@ end
 """
     distance_matrix(tree::AbstractPhyloTree)
 Return pairwise distances between all leaves on the `tree` in a `AxisArray`.
-The `Tree` branch types must have the `Length` trait.
 """
 function distance_matrix(tree::AbstractPhyloTree; kwargs...)
     ls = leaves(tree)
@@ -33,7 +31,6 @@ end
 """
     treelength(tree::AbstractPhyloTree, [idx::Integer])
 Return maximum distance from the root to the leaves in the `tree`. If the index is specified, this returns maximum distance from the specified `idx` to its leaves in the `tree`.
-The `Tree` branch types must have the `Length` trait. See also `treeheight`.
 """
 treelength(tree::AbstractPhyloTree) = treelength(tree, rootindex(tree))
 
