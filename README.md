@@ -43,6 +43,14 @@ Dict{Symbol, Any} with 2 entries:
   :value  => 77.0
   :length => 0.6
 
+julia> findnodes(tree, :label => isequal("A"))
+1-element Vector{Int64}:
+ 3
+
+julia> findbranches(tree, :value => x -> x ≥ 100)
+1-element Vector{Graphs.SimpleGraphs.SimpleEdge{Int64}}:
+ Edge 1 => 2
+
 julia> @time big_tree = Newick.File("/path/to/big_tree") |> MetaPhylo.Tree{Int, UnRooted, ReRootable}
   3.394991 seconds (23.63 M allocations: 1.180 GiB, 32.24% gc time)
 MetaPhylo.Tree with 54327 leaves.
