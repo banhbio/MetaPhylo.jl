@@ -2,8 +2,6 @@ AbstractTrees.nodevalue(::AbstractPhyloTree{Code}, idx) where Code = Code(idx)
 
 AbstractTrees.ParentLinks(::Type{<:AbstractPhyloTree}) = StoredParents()
 AbstractTrees.ChildIndexing(::Type{<:AbstractPhyloTree}) = IndexedChildren()
-AbstractTrees.NodeType(::Type{<:AbstractPhyloTree}) = HasNodeType()
-AbstractTrees.nodetype(::Type{<:AbstractPhyloTree{T}}) where T = T
 AbstractTrees.NodeType(::Type{<:IndexNode{N,T}}) where {N<:AbstractPhyloTree,T} = HasNodeType()
 AbstractTrees.nodetype(::Type{<:IndexNode{N,T}}) where {N<:AbstractPhyloTree,T} = IndexNode{N,T}
 AbstractTrees.SiblingLinks(::Type{<:AbstractPhyloTree}) = StoredSiblings()

@@ -47,9 +47,10 @@ julia> findnodes(tree, :label => isequal("A"))
 1-element Vector{Int64}:
  3
 
-julia> findbranches(tree, :value => x -> x ≥ 100)
+julia> findbranches(tree, :value => x -> x ≥ 90)
 1-element Vector{Graphs.SimpleGraphs.SimpleEdge{Int64}}:
  Edge 1 => 2
+ Edge 1 => 5
 
 julia> @time big_tree = Newick.File("/path/to/big_tree") |> MetaPhylo.Tree{Int, UnRooted, ReRootable}
   3.394991 seconds (23.63 M allocations: 1.180 GiB, 32.24% gc time)
