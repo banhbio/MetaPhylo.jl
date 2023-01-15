@@ -33,6 +33,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Tutorial" => "man/tutorial.md",
         "API" => "man/api.md",
     ],
 )
