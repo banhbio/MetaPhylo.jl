@@ -59,7 +59,5 @@ isrooted(tree::AbstractPhyloTree) = isrooted(typeof(tree))
 
 isrerootable(::Type{<:Tree{Code, rooted, ReRootable}}) where {Code, rooted} = true
 isrerootable(::Type{<:Tree{Code, rooted, NotReRootable}}) where {Code, rooted} = false
-isrerootable(tree::AbstractPhyloTree) = isrerootable(typeof(tree))
-
 isrerootable(::Type{<:StaticTree}) = false
-isrerootable(tree::StaticTree) = isrerootable(typeof(tree))
+isrerootable(tree::AbstractPhyloTree) = isrerootable(typeof(tree))
