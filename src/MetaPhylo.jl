@@ -16,7 +16,7 @@ include("show.jl")
 include("find.jl")
 
 #export type utils
-export Rooted, UnRooted, ReRootable, NotReRooteble, freeze, isrooted, isrerootable
+export Rooted, UnRooted, ReRootable, NotReRootable, freeze, isrooted, isrerootable
 
 #export basic funtions
 export rootindex, parent_branch, leafedges, leaves, isleaf, isinternal,
