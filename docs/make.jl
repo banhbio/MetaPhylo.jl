@@ -3,6 +3,23 @@ using Documenter
 
 DocMeta.setdocmeta!(MetaPhylo, :DocTestSetup, :(using MetaPhylo); recursive=true)
 
+function readme2index()
+    readme_path = "README.md"
+    index_path = "docs/src/index.md" 
+    f = open(readme_path,"r")
+    g = open(index_path, "w")
+    try
+        readme = read(f,String)
+        index = replace(readme,"![](docs/src/img" => "![](img")
+        write(g,readme)
+    finally
+        close(f)
+        close(g)
+    end
+end
+
+readme2index()
+
 makedocs(;
     modules=[MetaPhylo],
     authors="banhbio <ban@kuicr.kyoto-u.ac.jp> and contributors",
@@ -16,6 +33,7 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "API" => "man/api.md",
     ],
 )
 
