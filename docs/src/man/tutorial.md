@@ -56,6 +56,13 @@ julia> treeheight(tree)
 The subtree information can be obtained by `getindex` funciton with the node's index and `Colon` (`:`).
 
 ```julia
+julia> print_tree(tree[5,:])
+5: [value:98.0, length:0.8] 
+├─ 6: [value:77.0, length:0.6] 
+│  ├─ 7: [length:0.4] label:"C"
+│  └─ 8: [length:0.5] label:"D"
+└─ 9: [length:0.7] label:"E"
+
 julia> treesize(tree[5,:])
 5
 
@@ -64,13 +71,6 @@ julia> treebreadth(tree[5,:])
 
 julia> treeheight(tree[5,:])
 2
-
-julia> print_tree(tree[5,:])
-5: [value:98.0, length:0.8] 
-├─ 6: [value:77.0, length:0.6] 
-│  ├─ 7: [length:0.4] label:"C"
-│  └─ 8: [length:0.5] label:"D"
-└─ 9: [length:0.7] label:"E"
 ```
 
 ### Nodes and branches attributes
