@@ -45,7 +45,7 @@ function freeze(tree::Tree{Code, rooted}) where {Code, rooted}
     new_node_data = Dict(Pair.(new_node_keys, new_node_values))
     
     branch_pairs = collect(tree.branch_data)
-    new_branch_keys = Edge{Code}.(first.(branch_pairs))
+    new_branch_keys = Edge{NewCode}.(first.(branch_pairs))
     new_branch_values_tmp = namedtuple.(last.(branch_pairs))
     new_branch_values_fieldnames = intersect(unique(fieldnames.(new_branch_values_tmp))...) |> Tuple
     new_branch_values = select.(new_branch_values_tmp, Ref(new_branch_values_fieldnames))
