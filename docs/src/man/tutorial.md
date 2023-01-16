@@ -53,7 +53,7 @@ julia> treeheight(tree)
 3
 ```
 
-The subtree information can be obtained by `getindex` funciton with the node's index and `Colon` (`:`).
+Information about a subtree can be obtained using the `IndexNode` type, which is available through the `getindex` function given the node's index and `Colon` (`:`).
 
 ```julia
 julia> print_tree(tree[5,:])
@@ -107,10 +107,80 @@ julia> print_tree(tree)
 └─ 10: [length:0.9] label:"F"
 ```
 
-### Traversing tree
-(to do)
+## Traversing tree
 
-### Find nodes and branches by their attributes
+Tree traversing can be done through the `IndexNode` type. `IndexNode` can be used as input for all iterators (PreOderDFS, PostOderDFS, Leaves etc...) provided by [AbstractTrees.jl](https://github.com/JuliaCollections/AbstractTrees.jl)
+An IndexNode has a tree and its indexes internally. The index can be accessed through `nodevalue` or `nodevalues` functions.
+See [AbstractTrees.jl](https://github.com/JuliaCollections/AbstractTrees.jl) for details.
+
+```julia
+julia> [ idx for idx in nodevalues(PreOrderDFS(tree[:]))]
+8-element Vector{Int64}:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+
+julia> [ idx for idx in nodevalues(PostOrderDFS(tree[:]))]
+8-element Vector{Int64}:
+ 3
+ 4
+ 2
+ 6
+ 7
+ 5
+ 8
+ 1
+
+julia> [ tree[idx][:label] for idx in nodevalues(Leaves(tree[:]))]
+5-element Vector{String}:
+ "A"
+ "B"
+ "C"
+ "D"
+ "E"
+
+```
+
+## Tree structure modification
+
+Tree structure modification can be done through bang(!) functions (`reroot!`, `swap!`, `swapchildren!` etc.).
+Modified tree can be re-indexed by `reindex!`.
+```julia
+julia> ladderize!(tree)
+true
+
+julia> print_tree(tree)
+1: [root] 
+├─ 8: [length:0.7] label:"E"
+├─ 2: [value:100.0, length:0.3] 
+│  ├─ 3: [length:0.1] label:"A"
+│  └─ 4: [length:0.2] label:"B"
+└─ 5: [value:98.0, length:0.6] 
+   ├─ 6: [length:0.4] label:"C"
+   └─ 7: [length:0.5] label:"D"
+
+julia> reindex!(tree)
+true
+
+julia> print_tree(tree)
+1: [root] 
+├─ 2: [length:0.7] label:"E"
+├─ 3: [value:100.0, length:0.3] 
+│  ├─ 4: [length:0.1] label:"A"
+│  └─ 5: [length:0.2] label:"B"
+└─ 6: [value:98.0, length:0.6] 
+   ├─ 7: [length:0.4] label:"C"
+   └─ 8: [length:0.5] label:"D"
+
+```
+
+
+## Find nodes and branches by their attributes
 
 Nodes and branches that match the given criteria can be found with the `findnodes` and `findbranches` functions. These functions return the indices of the matched nodes and branches.
 
