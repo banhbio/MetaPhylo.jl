@@ -26,6 +26,10 @@ struct StaticTree{Code<:Integer, rooted<:RootState, BI<:NamedTuple, NI<:NamedTup
     node_data::Dict{Code, NI}
 end
 
+```
+    freeze(tree::MetaPhylo.Tree)
+Generate a `StaticTree` from a given tree.  `NamedTuple` stores only the keys that are common to all data among the node and branch data of previous tree.
+```
 function freeze(tree::Tree{_, rooted}) where {_, rooted}
     static_graph = StaticDiGraph(tree.graph)
     Code = eltype(static_graph)
@@ -53,10 +57,18 @@ end
 
 Base.copy(t::StaticTree{Code, rooted, BI, NI}) where {Code, rooted, BI, NI} = StaticTree{Code, rooted, rerootable, BI, NI}(copy(t.graph), t.root, deepcopy(t.branch_data), deepcopy(t.node_data)) 
 
+"""
+    isrooted(tree::AbstractPhyloTree)
+Return true if tree is rooted.
+"""
 isrooted(::Type{<:AbstractPhyloTree{Code, Rooted}}) where {Code} = true
 isrooted(::Type{<:AbstractPhyloTree{Code, UnRooted}}) where {Code} = false
 isrooted(tree::AbstractPhyloTree) = isrooted(typeof(tree))
 
+"""
+    isrerootable(tree::AbstractPhyloTree)
+Return true if tree is rerootable.
+"""
 isrerootable(::Type{<:Tree{Code, rooted, ReRootable}}) where {Code, rooted} = true
 isrerootable(::Type{<:Tree{Code, rooted, NotReRootable}}) where {Code, rooted} = false
 isrerootable(::Type{<:StaticTree}) = false
