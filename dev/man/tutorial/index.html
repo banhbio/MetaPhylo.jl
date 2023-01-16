@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial · MetaPhylo.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://banhbio.github.io/MetaPhylo.jl/man/tutorial/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">MetaPhylo.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li class="is-active"><a class="tocitem" href>Tutorial</a><ul class="internal"><li><a class="tocitem" href="#I/O"><span>I/O</span></a></li><li><a class="tocitem" href="#Understanding-MetaPhylo.Tree-data-types"><span>Understanding MetaPhylo.Tree data types</span></a></li><li><a class="tocitem" href="#StaticTree-(experimental)"><span>StaticTree (experimental)</span></a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/banhbio/MetaPhylo.jl/blob/main/docs/src/man/tutorial.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><h2 id="I/O"><a class="docs-heading-anchor" href="#I/O">I/O</a><a id="I/O-1"></a><a class="docs-heading-anchor-permalink" href="#I/O" title="Permalink"></a></h2><h3 id="Reading-trees"><a class="docs-heading-anchor" href="#Reading-trees">Reading trees</a><a id="Reading-trees-1"></a><a class="docs-heading-anchor-permalink" href="#Reading-trees" title="Permalink"></a></h3><pre><code class="language-julia hljs">#read a tree from a newick String
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Tutorial · MetaPhylo.jl</title><script data-outdated-warner src="../../assets/warner.js"></script><link rel="canonical" href="https://banhbio.github.io/MetaPhylo.jl/man/tutorial/"/><link href="https://cdnjs.cloudflare.com/ajax/libs/lato-font/3.0.0/css/lato-font.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/juliamono/0.045/juliamono.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/brands.min.css" rel="stylesheet" type="text/css"/><link href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.13.24/katex.min.css" rel="stylesheet" type="text/css"/><script>documenterBaseURL="../.."</script><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" data-main="../../assets/documenter.js"></script><script src="../../siteinfo.js"></script><script src="../../../versions.js"></script><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-dark.css" data-theme-name="documenter-dark" data-theme-primary-dark/><link class="docs-theme-link" rel="stylesheet" type="text/css" href="../../assets/themes/documenter-light.css" data-theme-name="documenter-light" data-theme-primary/><script src="../../assets/themeswap.js"></script></head><body><div id="documenter"><nav class="docs-sidebar"><div class="docs-package-name"><span class="docs-autofit"><a href="../../">MetaPhylo.jl</a></span></div><form class="docs-search" action="../../search/"><input class="docs-search-query" id="documenter-search-query" name="q" type="text" placeholder="Search docs"/></form><ul class="docs-menu"><li><a class="tocitem" href="../../">Home</a></li><li class="is-active"><a class="tocitem" href>Tutorial</a><ul class="internal"><li><a class="tocitem" href="#I/O"><span>I/O</span></a></li><li><a class="tocitem" href="#Understanding-MetaPhylo.Tree-data-types"><span>Understanding MetaPhylo.Tree data types</span></a></li><li><a class="tocitem" href="#Traversing-tree"><span>Traversing tree</span></a></li><li><a class="tocitem" href="#Tree-structure-modification"><span>Tree structure modification</span></a></li><li><a class="tocitem" href="#Find-nodes-and-branches-by-their-attributes"><span>Find nodes and branches by their attributes</span></a></li><li><a class="tocitem" href="#StaticTree-(experimental)"><span>StaticTree (experimental)</span></a></li></ul></li><li><a class="tocitem" href="../api/">API</a></li></ul><div class="docs-version-selector field has-addons"><div class="control"><span class="docs-label button is-static is-size-7">Version</span></div><div class="docs-selector control is-expanded"><div class="select is-fullwidth is-size-7"><select id="documenter-version-selector"></select></div></div></div></nav><div class="docs-main"><header class="docs-navbar"><nav class="breadcrumb"><ul class="is-hidden-mobile"><li class="is-active"><a href>Tutorial</a></li></ul><ul class="is-hidden-tablet"><li class="is-active"><a href>Tutorial</a></li></ul></nav><div class="docs-right"><a class="docs-edit-link" href="https://github.com/banhbio/MetaPhylo.jl/blob/main/docs/src/man/tutorial.md#" title="Edit on GitHub"><span class="docs-icon fab"></span><span class="docs-label is-hidden-touch">Edit on GitHub</span></a><a class="docs-settings-button fas fa-cog" id="documenter-settings-button" href="#" title="Settings"></a><a class="docs-sidebar-button fa fa-bars is-hidden-desktop" id="documenter-sidebar-button" href="#"></a></div></header><article class="content" id="documenter-page"><h1 id="Tutorial"><a class="docs-heading-anchor" href="#Tutorial">Tutorial</a><a id="Tutorial-1"></a><a class="docs-heading-anchor-permalink" href="#Tutorial" title="Permalink"></a></h1><h2 id="I/O"><a class="docs-heading-anchor" href="#I/O">I/O</a><a id="I/O-1"></a><a class="docs-heading-anchor-permalink" href="#I/O" title="Permalink"></a></h2><h3 id="Reading-trees"><a class="docs-heading-anchor" href="#Reading-trees">Reading trees</a><a id="Reading-trees-1"></a><a class="docs-heading-anchor-permalink" href="#Reading-trees" title="Permalink"></a></h3><pre><code class="language-julia hljs">#read a tree from a newick String
 julia&gt; tree = parse_newick(&quot;((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8)100:1.2;&quot;, MetaPhylo.Tree{Int, UnRooted, ReRootable})
 MetaPhylo.Tree with 5 leaves.
     Rooted: false
@@ -26,21 +26,21 @@ julia&gt; treebreadth(tree)
 6
 
 julia&gt; treeheight(tree)
-3</code></pre><p>The subtree information can be obtained by <code>getindex</code> funciton with the node&#39;s index and <code>Colon</code> (<code>:</code>).</p><pre><code class="language-julia hljs">julia&gt; treesize(tree[5,:])
+3</code></pre><p>Information about a subtree can be obtained using the <code>IndexNode</code> type, which is available through the <code>getindex</code> function given the node&#39;s index and <code>Colon</code> (<code>:</code>).</p><pre><code class="language-julia hljs">julia&gt; print_tree(tree[5,:])
+5: [value:98.0, length:0.8] 
+├─ 6: [value:77.0, length:0.6] 
+│  ├─ 7: [length:0.4] label:&quot;C&quot;
+│  └─ 8: [length:0.5] label:&quot;D&quot;
+└─ 9: [length:0.7] label:&quot;E&quot;
+
+julia&gt; treesize(tree[5,:])
 5
 
 julia&gt; treebreadth(tree[5,:])
 3
 
 julia&gt; treeheight(tree[5,:])
-2
-
-julia&gt; print_tree(tree[5,:])
-5: [value:98.0, length:0.8] 
-├─ 6: [value:77.0, length:0.6] 
-│  ├─ 7: [length:0.4] label:&quot;C&quot;
-│  └─ 8: [length:0.5] label:&quot;D&quot;
-└─ 9: [length:0.7] label:&quot;E&quot;</code></pre><h3 id="Nodes-and-branches-attributes"><a class="docs-heading-anchor" href="#Nodes-and-branches-attributes">Nodes and branches attributes</a><a id="Nodes-and-branches-attributes-1"></a><a class="docs-heading-anchor-permalink" href="#Nodes-and-branches-attributes" title="Permalink"></a></h3><p>The attributes of each node and branch of the can be accessed with <code>getindex</code>. The attributes are stored in the <code>Dict</code>s.</p><pre><code class="language-julia hljs">julia&gt; tree[3]
+2</code></pre><h3 id="Nodes-and-branches-attributes"><a class="docs-heading-anchor" href="#Nodes-and-branches-attributes">Nodes and branches attributes</a><a id="Nodes-and-branches-attributes-1"></a><a class="docs-heading-anchor-permalink" href="#Nodes-and-branches-attributes" title="Permalink"></a></h3><p>The attributes of each node and branch of the can be accessed with <code>getindex</code>. The attributes are stored in the <code>Dict</code>s.</p><pre><code class="language-julia hljs">julia&gt; tree[3]
 Dict{Symbol, Any} with 1 entry:
   :label =&gt; &quot;A&quot;
 
@@ -60,11 +60,65 @@ julia&gt; print_tree(tree)
 │  │  ├─ 7: [length:0.4] label:&quot;C&quot;
 │  │  └─ 8: [length:0.5] label:&quot;D&quot;
 │  └─ 9: [length:0.7] label:&quot;E&quot;
-└─ 10: [length:0.9] label:&quot;F&quot;</code></pre><h3 id="Traversing-tree"><a class="docs-heading-anchor" href="#Traversing-tree">Traversing tree</a><a id="Traversing-tree-1"></a><a class="docs-heading-anchor-permalink" href="#Traversing-tree" title="Permalink"></a></h3><p>(to do)</p><h3 id="Find-nodes-and-branches-by-their-attributes"><a class="docs-heading-anchor" href="#Find-nodes-and-branches-by-their-attributes">Find nodes and branches by their attributes</a><a id="Find-nodes-and-branches-by-their-attributes-1"></a><a class="docs-heading-anchor-permalink" href="#Find-nodes-and-branches-by-their-attributes" title="Permalink"></a></h3><p>Nodes and branches that match the given criteria can be found with the <code>findnodes</code> and <code>findbranches</code> functions. These functions return the indices of the matched nodes and branches.</p><pre><code class="language-julia hljs">julia&gt; findnodes(tree, :label =&gt; isequal(&quot;A&quot;))
+└─ 10: [length:0.9] label:&quot;F&quot;</code></pre><h2 id="Traversing-tree"><a class="docs-heading-anchor" href="#Traversing-tree">Traversing tree</a><a id="Traversing-tree-1"></a><a class="docs-heading-anchor-permalink" href="#Traversing-tree" title="Permalink"></a></h2><p>Tree traversing can be done through the <code>IndexNode</code> type. <code>IndexNode</code> can be used as input for all iterators (PreOderDFS, PostOderDFS, Leaves etc...) provided by <a href="https://github.com/JuliaCollections/AbstractTrees.jl">AbstractTrees.jl</a> An IndexNode has a tree and its indexes internally. The index can be accessed through <code>nodevalue</code> or <code>nodevalues</code> functions. See <a href="https://github.com/JuliaCollections/AbstractTrees.jl">AbstractTrees.jl</a> for details.</p><pre><code class="language-julia hljs">julia&gt; [ idx for idx in nodevalues(PreOrderDFS(tree[:]))]
+8-element Vector{Int64}:
+ 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+
+julia&gt; [ idx for idx in nodevalues(PostOrderDFS(tree[:]))]
+8-element Vector{Int64}:
+ 3
+ 4
+ 2
+ 6
+ 7
+ 5
+ 8
+ 1
+
+julia&gt; [ tree[idx][:label] for idx in nodevalues(Leaves(tree[:]))]
+5-element Vector{String}:
+ &quot;A&quot;
+ &quot;B&quot;
+ &quot;C&quot;
+ &quot;D&quot;
+ &quot;E&quot;
+</code></pre><h2 id="Tree-structure-modification"><a class="docs-heading-anchor" href="#Tree-structure-modification">Tree structure modification</a><a id="Tree-structure-modification-1"></a><a class="docs-heading-anchor-permalink" href="#Tree-structure-modification" title="Permalink"></a></h2><p>Tree structure modification can be done through bang(!) functions (<code>reroot!</code>, <code>swap!</code>, <code>swapchildren!</code> etc.). Modified tree can be re-indexed by <code>reindex!</code>.</p><pre><code class="language-julia hljs">julia&gt; ladderize!(tree)
+true
+
+julia&gt; print_tree(tree)
+1: [root] 
+├─ 8: [length:0.7] label:&quot;E&quot;
+├─ 2: [value:100.0, length:0.3] 
+│  ├─ 3: [length:0.1] label:&quot;A&quot;
+│  └─ 4: [length:0.2] label:&quot;B&quot;
+└─ 5: [value:98.0, length:0.6] 
+   ├─ 6: [length:0.4] label:&quot;C&quot;
+   └─ 7: [length:0.5] label:&quot;D&quot;
+
+julia&gt; reindex!(tree)
+true
+
+julia&gt; print_tree(tree)
+1: [root] 
+├─ 2: [length:0.7] label:&quot;E&quot;
+├─ 3: [value:100.0, length:0.3] 
+│  ├─ 4: [length:0.1] label:&quot;A&quot;
+│  └─ 5: [length:0.2] label:&quot;B&quot;
+└─ 6: [value:98.0, length:0.6] 
+   ├─ 7: [length:0.4] label:&quot;C&quot;
+   └─ 8: [length:0.5] label:&quot;D&quot;
+</code></pre><h2 id="Find-nodes-and-branches-by-their-attributes"><a class="docs-heading-anchor" href="#Find-nodes-and-branches-by-their-attributes">Find nodes and branches by their attributes</a><a id="Find-nodes-and-branches-by-their-attributes-1"></a><a class="docs-heading-anchor-permalink" href="#Find-nodes-and-branches-by-their-attributes" title="Permalink"></a></h2><p>Nodes and branches that match the given criteria can be found with the <code>findnodes</code> and <code>findbranches</code> functions. These functions return the indices of the matched nodes and branches.</p><pre><code class="language-julia hljs">julia&gt; findnodes(tree, :label =&gt; isequal(&quot;A&quot;))
 1-element Vector{Int64}:
  3
 
 julia&gt; findbranches(tree, :value =&gt; x -&gt; x ≥ 90)
 1-element Vector{Graphs.SimpleGraphs.SimpleEdge{Int64}}:
  Edge 1 =&gt; 2
- Edge 1 =&gt; 5</code></pre><h2 id="StaticTree-(experimental)"><a class="docs-heading-anchor" href="#StaticTree-(experimental)">StaticTree (experimental)</a><a id="StaticTree-(experimental)-1"></a><a class="docs-heading-anchor-permalink" href="#StaticTree-(experimental)" title="Permalink"></a></h2><p>You can generate static version of <code>MetaPhylo.Tree</code> through <code>freeze</code> function. <code>MetaPhylo.StaticTree</code> has an <code>StaticGraph</code> internally (<a href="https://github.com/JuliaGraphs/StaticGraphs.jl">StaticGraphs.jl</a>), and the properties of each node and branch are provided in <code>NamedTuple</code>s. This allows for type stable access to node and edge properties.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Sunday 15 January 2023 15:22">Sunday 15 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+ Edge 1 =&gt; 5</code></pre><h2 id="StaticTree-(experimental)"><a class="docs-heading-anchor" href="#StaticTree-(experimental)">StaticTree (experimental)</a><a id="StaticTree-(experimental)-1"></a><a class="docs-heading-anchor-permalink" href="#StaticTree-(experimental)" title="Permalink"></a></h2><p>You can generate static version of <code>MetaPhylo.Tree</code> through <code>freeze</code> function. <code>MetaPhylo.StaticTree</code> has an <code>StaticGraph</code> internally (<a href="https://github.com/JuliaGraphs/StaticGraphs.jl">StaticGraphs.jl</a>), and the properties of each node and branch are provided in <code>NamedTuple</code>s. This allows for type stable access to node and edge properties.</p></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../../">« Home</a><a class="docs-footer-nextpage" href="../api/">API »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 0.27.23 on <span class="colophon-date" title="Monday 16 January 2023 05:32">Monday 16 January 2023</span>. Using Julia version 1.8.5.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
