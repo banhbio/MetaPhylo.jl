@@ -26,13 +26,14 @@ struct StaticTree{Code<:Integer, rooted<:RootState, BI<:NamedTuple, NI<:NamedTup
     node_data::Dict{Code, NI}
 end
 
-```
+"""
     freeze(tree::MetaPhylo.Tree)
-Generate a `StaticTree` from a given tree.  `NamedTuple` stores only the keys that are common to all data among the node and branch data of previous tree.
-```
-function freeze(tree::Tree{_, rooted}) where {_, rooted}
+Generate a `StaticTree` from a tree.
+`NamedTuple` stores only the keys that are common to all data among the node and branch data of previous tree.
+"""
+function freeze(tree::Tree{Code, rooted}) where {Code, rooted}
     static_graph = StaticDiGraph(tree.graph)
-    Code = eltype(static_graph)
+    NewCode = eltype(static_graph)
 
     node_pairs = collect(tree.node_data)
     new_node_keys = Code.(first.(node_pairs))
@@ -52,7 +53,7 @@ function freeze(tree::Tree{_, rooted}) where {_, rooted}
     BI = eltype(new_branch_values)
     new_branch_data = Dict(Pair.(new_branch_keys, new_branch_values))
 
-    return StaticTree{Code, rooted, BI, NI}(static_graph, Code(tree.root), new_branch_data, new_node_data)
+    return StaticTree{NewCode, rooted, BI, NI}(static_graph, Code(tree.root), new_branch_data, new_node_data)
 end
 
 Base.copy(t::StaticTree{Code, rooted, BI, NI}) where {Code, rooted, BI, NI} = StaticTree{Code, rooted, rerootable, BI, NI}(copy(t.graph), t.root, deepcopy(t.branch_data), deepcopy(t.node_data)) 
