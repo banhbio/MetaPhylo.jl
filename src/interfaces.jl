@@ -152,9 +152,9 @@ end
     reroot!(tree::Tree, idx::Integer)
 Reroot the `tree` at the specified node. Return `true` if rerooting success.
 """
-reroot!(::Tree{Code, Root, NotReRootable}) where {Code, Root} = error("The tree is not rerootable")
+reroot!(::Tree{Code, root, NotReRootable}) where {Code, root} = error("The tree is not rerootable")
 
-function reroot!(tree::Tree{Code, Root, ReRootable}, idx::Integer) where {Code, Root}
+function reroot!(tree::Tree{Code, root, ReRootable}, idx::Integer) where {Code, root}
     isleaf(tree, idx) && error("Leaf nodes are not allowed to reroot")
     path = findpath(tree, rootindex(tree), idx)
     @assert !isnothing(path)
@@ -225,6 +225,11 @@ end
 ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
 ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
 
+
+"""
+    add_child!(tree::Tree, idx::Integer, branch_data::Dict{Symbol, Any}, node_data::Dict{Symbol, Any})
+Add a child node to the specified node with branch and node data. Return `true` on success. 
+"""
 function add_child!(tree::Tree, idx::Integer, bi::Dict{Symbol, Any}, ni::Dict{Symbol, Any})
     !haskey(tree, idx) && return false
     added = add_vertex!(tree.graph)
@@ -237,6 +242,10 @@ function add_child!(tree::Tree, idx::Integer, bi::Dict{Symbol, Any}, ni::Dict{Sy
     return added
 end
 
+"""
+    rem_descendants(tree::Tree, idx::Integer)
+Remove all descendants of the specified node. Return `true` on success. 
+"""
 function rem_descendants!(tree::Tree, idx::Integer)
     !haskey(tree, idx) && throw(ArgumentError("The tree does not have the index to be removed"))
     node_indices = nodevalue.(PreOrderDFS(IndexNode(tree, idx)))
