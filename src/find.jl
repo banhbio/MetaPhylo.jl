@@ -17,5 +17,13 @@ function findbranches(tree::AbstractPhyloTree, args::Pair{<:OneOrVector{Symbol},
 end
 
 function _find_key(dict::Dict, args...; ifnot_haskey=false)
+    args = map(args) do (key, f)
+        if key isa Symbol
+            key_vec = [key]
+        else
+            key_vec = key
+        end
+        return key_vec => f 
+    end
     [ idx for (idx, value) in dict if all([(all(haskey.(Ref(value), key)) ? f(getindex.(Ref(value), key)...) : ifnot_haskey) for (key, f) in args])]
 end
