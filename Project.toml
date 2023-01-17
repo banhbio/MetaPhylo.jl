@@ -13,7 +13,7 @@ Reexport = "189a3867-3050-52da-a836-e630ba90ab69"
 StaticGraphs = "4c8beaf5-199b-59a0-a7f2-21d17de635b6"
 
 [compat]
-AbstractTrees = "0.4.3"
+AbstractTrees = "0.4.4"
 AxisArrays = "0.4"
 Graphs = "1"
 Lerche = "0.5"
