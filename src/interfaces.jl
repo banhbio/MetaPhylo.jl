@@ -106,11 +106,11 @@ function ancestors(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code}
 end
 
 """
-    common_ancestor(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
+    common_ancestor(tree::AbstractPhyloTree, idx1::Integer...)
 Return the common ancestor index of two specified `idx1` and `idx2` nodes.
 """
-function common_ancestor(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer)
-    intersect(ancestors(tree, idx1), ancestors(tree, idx2))[end]
+function common_ancestor(tree::AbstractPhyloTree, idx::Integer...)
+    intersect(ancestors.(Ref(tree), idx)...)[end]
 end
 
 Base.setindex!(tree::Tree, data, idx::Integer) = setindex!(tree.node_data, data, idx)
@@ -152,9 +152,10 @@ end
     reroot!(tree::Tree, idx::Integer)
 Reroot the `tree` at the specified node. Return `true` if rerooting success.
 """
-reroot!(::Tree{Code, root, NotReRootable}) where {Code, root} = error("The tree is not rerootable")
+reroot!(::Tree{Code, root, NotReRootable}, idx::Integer) where {Code, root} = error("The tree is not rerootable")
+reroot!(::Tree{Code, Rooted}, idx::Integer) where {Code} = error("Rerooting of the rooted tree is not supported yet.")
 
-function reroot!(tree::Tree{Code, root, ReRootable}, idx::Integer) where {Code, root}
+function reroot!(tree::Tree{Code, UnRooted, ReRootable}, idx::Integer) where {Code}
     isleaf(tree, idx) && error("Leaf nodes are not allowed to reroot")
     path = findpath(tree, rootindex(tree), idx)
     @assert !isnothing(path)
