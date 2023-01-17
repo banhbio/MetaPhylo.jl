@@ -51,6 +51,10 @@ AbstractTrees.nodetype(::Type{Dict{Symbol}}) = Dict{Symbol}
 function parse_newick(input::AbstractString, T::Type{<:MetaPhylo.Tree{Code, rooted, rerootable}}) where {Code, rooted, rerootable}
     parsed_tree = Lerche.parse(parser, input) # return tree in Dict{Symbol, Any}
 
+    if rooted <: Rooted
+        parsed_tree = Dict{Symbol, Any}(:descendants=>[parsed_tree], :info=>Dict{Symbol, Any}())
+    end
+
     #TODO: push!() might be slow.
     edges = Edge{Code}[]
     node_data = Pair{Code, Dict{Symbol, Any}}[]
