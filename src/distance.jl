@@ -27,8 +27,8 @@ function distance_matrix(tree::AbstractPhyloTree; kwargs...)
     return distance_matrix(tree, leaves(tree))
 end
 
-function distance_matrix(tree::AbstractPhyloTree, idices::Vector{<:Integer})
-    return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in indices, idx2 in indices], Axis{:x}(idices), Axis{:y}(indices))
+function distance_matrix(tree::AbstractPhyloTree, indices::Vector{<:Integer}; kwargs...)
+    return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in indices, idx2 in indices], Axis{:x}(indices), Axis{:y}(indices))
 end
 #TODO: Is it correct terminology?
 """
