@@ -107,7 +107,7 @@ end
 
 """
     common_ancestor(tree::AbstractPhyloTree, idx1::Integer...)
-Return the common ancestor index of two specified `idx1` and `idx2` nodes.
+Return the lowest common ancestor index of two specified `idx1` and `idx2` nodes.
 """
 function common_ancestor(tree::AbstractPhyloTree, idx::Integer...)
     intersect(ancestors.(Ref(tree), idx)...)[end]
