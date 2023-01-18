@@ -216,7 +216,7 @@ function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
         idx = nodevalue(node)
         sorted = sort(
             childindices(tree, idx),
-            by = x -> treebreadth(IndexNode(tree,x)),
+            by = x -> treebreadth(tree[x,:]),
             rev = left
             )
         swapchildren!(tree, idx, sorted)
@@ -224,7 +224,7 @@ function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
     return true
 end
 ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
-ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
+ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(tree[idx,:]; kwargs...)
 
 
 """
@@ -249,7 +249,7 @@ Remove all descendants of the specified node. Return `true` on success.
 """
 function rem_descendants!(tree::Tree, idx::Integer)
     !haskey(tree, idx) && throw(ArgumentError("The tree does not have the index to be removed"))
-    node_indices = nodevalue.(PreOrderDFS(IndexNode(tree, idx)))
+    node_indices = nodevalue.(PreOrderDFS(tree[idx,:]))
     vmap = rem_vertices!(tree.graph, node_indices)
 
     for (new_idx, old_idx) in enumerate(vmap)
