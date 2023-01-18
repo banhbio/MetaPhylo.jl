@@ -106,8 +106,8 @@ function ancestors(tree::AbstractPhyloTree{Code}, idx::Integer) where {Code}
 end
 
 """
-    common_ancestor(tree::AbstractPhyloTree, idx1::Integer...)
-Return the common ancestor index of two specified `idx1` and `idx2` nodes.
+    common_ancestor(tree::AbstractPhyloTree, idx::Integer...)
+Return the lowest common ancestor index among specified nodes.
 """
 function common_ancestor(tree::AbstractPhyloTree, idx::Integer...)
     intersect(ancestors.(Ref(tree), idx)...)[end]
@@ -128,8 +128,7 @@ function reindex!(tree::Tree{Code}) where {Code}
     node_data = Pair{Code, Dict{Symbol, Any}}[]
     branch_data = Pair{Edge{Code}, Dict{Symbol, Any}}[]
 
-    for (new_index, idx_node) in enumerate(PreOrderDFS(IndexNode(tree)))
-        old_index = idx_node.index
+    for (new_index, old_index) in enumerate(nodevalues(PreOrderDFS(IndexNode(tree))))
         counterpart[old_index] = new_index
         push!(node_data, new_index=>tree.node_data[old_index])
         pold_index = parentindex(tree, old_index)
@@ -216,7 +215,7 @@ function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
         idx = nodevalue(node)
         sorted = sort(
             childindices(tree, idx),
-            by = x -> treebreadth(IndexNode(tree,x)),
+            by = x -> treebreadth(tree[x,:]),
             rev = left
             )
         swapchildren!(tree, idx, sorted)
@@ -224,7 +223,7 @@ function ladderize!(idxnode::IndexNode{<:Tree, Int}; left=false)
     return true
 end
 ladderize!(tree::Tree; kwargs...) = ladderize!(IndexNode(tree); kwargs...)
-ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(IndexNode(tree, idx); kwargs...)
+ladderize!(tree::Tree, idx::Int; kwargs...) = ladderize!(tree[idx,:]; kwargs...)
 
 
 """
@@ -249,7 +248,7 @@ Remove all descendants of the specified node. Return `true` on success.
 """
 function rem_descendants!(tree::Tree, idx::Integer)
     !haskey(tree, idx) && throw(ArgumentError("The tree does not have the index to be removed"))
-    node_indices = nodevalue.(PreOrderDFS(IndexNode(tree, idx)))
+    node_indices = nodevalue.(PreOrderDFS(tree[idx,:]))
     vmap = rem_vertices!(tree.graph, node_indices)
 
     for (new_idx, old_idx) in enumerate(vmap)

@@ -17,7 +17,7 @@ julia> import Pkg; Pkg.add(url="https://github.com/banhbio/MetaPhylo.jl");
 
 julia> using MetaPhylo
 
-julia> tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4, D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+julia> tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 MetaPhylo.Tree with 6 leaves.
     Rooted: false
     Rerootable: true
@@ -30,7 +30,7 @@ julia> print_tree(tree)
 ├─ 5: [value:98.0, length:0.8] 
 │  ├─ 6: [value:77.0, length:0.6] 
 │  │  ├─ 7: [length:0.4] label:"C"
-│  │  └─ 8: [length:0.5] label:" D"
+│  │  └─ 8: [length:0.5] label:"D"
 │  └─ 9: [length:0.7] label:"E"
 └─ 10: [length:0.9] label:"F"
 
