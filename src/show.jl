@@ -20,7 +20,7 @@ function Base.show(io::IO, tree::StaticTree{Code, rooted, BI, NI}) where{Code, r
 end
 AbstractTrees.print_tree(tree::AbstractPhyloTree; kwargs...) = print_tree(IndexNode(tree); kwargs...)
 AbstractTrees.print_tree(io::IO, tree::AbstractPhyloTree; kwargs...) = print_tree(io, IndexNode(tree); kwargs...)
-AbstractTrees.print_tree(f::Function, io::IO, tree::AbstractPhyloTree; kwargs...) = print_tree(f::Function, io, IndexNode(tree); kwargs...)
+AbstractTrees.print_tree(f::Function, g::Function, io::IO, tree::AbstractPhyloTree; kwargs...) = print_tree(f, g, io, IndexNode(tree); kwargs...)
 
 function _join_namedtuplevalues(node, delim::AbstractString)
     entries = map(collect(pairs(node))) do (key,val)
