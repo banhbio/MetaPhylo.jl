@@ -19,14 +19,17 @@ function distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer; kwargs.
 end
 
 """
-    distance_matrix(tree::AbstractPhyloTree)
-Return pairwise distances between all leaves on the `tree` in a `AxisArray`.
+    distance_matrix(tree::AbstractPhyloTree, [indices::Vector{<:Integer}])
+Return pairwise distances between all indices on the `tree` as an `AxisArray`.
+If not indices are specified, all leaves are used as input.
 """
 function distance_matrix(tree::AbstractPhyloTree; kwargs...)
-    ls = leaves(tree)
-    return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in ls, idx2 in ls], Axis{:x}(ls), Axis{:y}(ls))
+    return distance_matrix(tree, leaves(tree))
 end
 
+function distance_matrix(tree::AbstractPhyloTree, idices::Vector{<:Integer})
+    return AxisArray([distance(tree, idx1, idx2; kwargs...) for idx1 in indices, idx2 in indices], Axis{:x}(idices), Axis{:y}(indices))
+end
 #TODO: Is it correct terminology?
 """
     treelength(tree::AbstractPhyloTree, [idx::Integer])
