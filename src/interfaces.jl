@@ -128,8 +128,7 @@ function reindex!(tree::Tree{Code}) where {Code}
     node_data = Pair{Code, Dict{Symbol, Any}}[]
     branch_data = Pair{Edge{Code}, Dict{Symbol, Any}}[]
 
-    for (new_index, idx_node) in enumerate(PreOrderDFS(IndexNode(tree)))
-        old_index = idx_node.index
+    for (new_index, old_index) in enumerate(nodevalues(PreOrderDFS(IndexNode(tree))))
         counterpart[old_index] = new_index
         push!(node_data, new_index=>tree.node_data[old_index])
         pold_index = parentindex(tree, old_index)
