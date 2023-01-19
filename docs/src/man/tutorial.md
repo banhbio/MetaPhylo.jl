@@ -6,7 +6,7 @@
 
 ```julia
 #read a tree from a newick String
-julia> tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8)100:1.2;", MetaPhylo.Tree{Int, UnRooted, ReRootable})
+julia> tree = parse_newick("((A:0.1,B:0.2)100:0.3,((C:0.4,D:0.5)77:0.6,E:0.7)98:0.8,F:0.9);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
 MetaPhylo.Tree with 5 leaves.
     Rooted: false
     Rerootable: true
