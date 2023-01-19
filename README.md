@@ -13,7 +13,7 @@ This package is in the early stage of development and probably has many bugs (es
 
 ## Example
 ```julia
-julia> import Pkg; Pkg.add(url="https://github.com/banhbio/MetaPhylo.jl");
+julia> import Pkg; Pkg.add("MetaPhylo");
 
 julia> using MetaPhylo
 
