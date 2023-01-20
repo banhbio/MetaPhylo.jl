@@ -4,6 +4,7 @@
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://banhbio.github.io/MetaPhylo.jl/dev/)
 [![Build Status](https://github.com/banhbio/MetaPhylo.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/banhbio/MetaPhylo.jl/actions/workflows/CI.yml?query=branch%3Amain)
 [![Coverage](https://codecov.io/gh/banhbio/MetaPhylo.jl/branch/main/graph/badge.svg)](https://codecov.io/gh/banhbio/MetaPhylo.jl)
+[![DOI](https://zenodo.org/badge/587552550.svg)](https://zenodo.org/badge/latestdoi/587552550)
 
 `MetaPhylo.jl` is Julia package for dealing with phylogenetic trees.
 This package is in the early stage of development and probably has many bugs (especially around Newick format). Bug reports and any suggestions are welcome🙂!
