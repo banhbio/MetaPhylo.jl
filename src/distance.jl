@@ -1,6 +1,14 @@
-function distance(tree::AbstractPhyloTree, edge::Edge; length_key=:length)
-    branch = tree[edge]
-    return branch[length_key]
+function _distace_from_root(tree::AbstractPhyloTree{Code}, index::Integer; length_key=:length) where Code
+    edges = Edge{Code}[]
+    current_idx = index
+    while true
+        pidx = parentindex(tree, current_idx)
+        isnothing(pidx) && break
+        push!(edges, Edge{Code}(pidx, current_idx))
+        current_idx = pidx
+    end
+    isempty(edges) && return 0.0
+    return getindex.(getindex.(Ref(tree), edges), length_key) .|> Float64 |> sum
 end
 
 #TODO: fix returned type
@@ -9,13 +17,8 @@ end
 Return distance between two nodes on a tree. 
 """
 function distance(tree::AbstractPhyloTree, idx1::Integer, idx2::Integer; kwargs...)
-    idx1 == idx2 && return 0.0
     ca = common_ancestor(tree, idx1, idx2)
-    map([idx1, idx2]) do idx
-        path = findpath(tree, ca, idx)
-        edges = Edge.(path[1:end-1], path[2:end])
-        distances = distance.(Ref(tree), edges; kwargs...)
-    end |> Iterators.flatten |> sum
+    return _distace_from_root(tree, idx1; kwargs...) + _distace_from_root(tree, idx2; kwargs...) - 2 * _distace_from_root(tree, ca; kwargs...)
 end
 
 """

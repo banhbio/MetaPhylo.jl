@@ -166,19 +166,18 @@ end
     freezed_tree = freeze(tree)
     
     for t in [tree, freezed_tree]
-        @test distance(t, Edge(2,3)) == 0.1
-        @test distance(t, 3, 4) == 0.1 + 0.2
-        @test distance(t, 3, 3) == Float64(0)
-        @test treelength(t) == 0.8 + 0.6 + 0.5
-        @test treelength(t, 2) == 0.2 
-        @test treelength(t, 3) == Float64(0)
+        @test distance(t, 3, 4) ≈ 0.1 + 0.2
+        @test distance(t, 3, 3) ≈ Float64(0)
+        @test treelength(t) ≈ 0.8 + 0.6 + 0.5
+        @test treelength(t, 2) ≈ 0.2 
+        @test treelength(t, 3) ≈ Float64(0)
     end
 
     tree = Newick.parse_newick("((A:1,B:2):3,(C:4,D:5):6,E:7);", MetaPhylo.Tree{Int, UnRooted, ReRootable})
     freezed_tree = freeze(tree)
 
     for t in [tree, freezed_tree]
-        @test distance_matrix(t) == AxisArray(
+        @test distance_matrix(t) ≈ AxisArray(
                                        [0.0 3.0 14.0 15.0 11.0;
                                         3.0 0.0 15.0 16.0 12.0;
                                         14.0 15.0 0.0 9.0 17.0;
